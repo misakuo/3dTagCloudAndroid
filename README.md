@@ -14,7 +14,9 @@ compile 'com.moxun:tagcloudlib:1.0.2'
 ```
 
 2. 在布局文件中引入  
-```<com.moxun.tagcloudlib.view.TagCloudView/>```  
+```  
+<com.moxun.tagcloudlib.view.TagCloudView/>  
+```  
 
 3. 设置Adapter
 继承`TagsAdapter`，实现以下方法
