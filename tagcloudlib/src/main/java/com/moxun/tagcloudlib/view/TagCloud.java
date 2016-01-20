@@ -23,6 +23,10 @@ public class TagCloud {
     private int smallest, largest; //used to find spectrum for tag colors
     private boolean distrEven = true; //default is to distribute tags evenly on the Cloud
 
+    public TagCloud() {
+        this(DEFAULT_RADIUS);
+    }
+
     public TagCloud(int radius) {
         this(new ArrayList<Tag>(), radius);
     }
@@ -79,6 +83,11 @@ public class TagCloud {
 
     public Tag get(int position) {
         return tagCloud.get(position);
+    }
+
+    public Tag getTop() {
+        int i = tagCloud.size() - 1;
+        return get(i);
     }
 
     public int indexOf(Tag tag) {

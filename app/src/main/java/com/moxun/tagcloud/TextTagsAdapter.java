@@ -1,4 +1,4 @@
-package com.moxun.tagcloudlib.view;
+package com.moxun.tagcloud;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -6,6 +6,8 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.moxun.tagcloudlib.view.TagsAdapter;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,7 +17,7 @@ import java.util.Random;
 /**
  * Created by moxun on 16/1/19.
  */
-public class TextTagsAdapter extends TagsAdapter{
+public class TextTagsAdapter extends TagsAdapter {
 
     private List<String> dataSet = new ArrayList<>();
 
@@ -32,9 +34,9 @@ public class TextTagsAdapter extends TagsAdapter{
     @Override
     public View getView(Context context, int position, ViewGroup parent) {
         TextView tv = new TextView(context);
-        ViewGroup.MarginLayoutParams lp = new ViewGroup.MarginLayoutParams(80, 80);
+        ViewGroup.MarginLayoutParams lp = new ViewGroup.MarginLayoutParams(100, 100);
         tv.setLayoutParams(lp);
-        tv.setText((String) getItem(position));
+        tv.setText("No." + position);
         tv.setGravity(Gravity.CENTER);
         return tv;
     }
@@ -47,5 +49,10 @@ public class TextTagsAdapter extends TagsAdapter{
     @Override
     public int getPopularity(int position) {
         return Math.abs(new Random().nextInt(5) + 2);
+    }
+
+    @Override
+    public void onThemeColorChanged(View view, int themeColor) {
+        ((TextView)view).setTextColor(themeColor);
     }
 }

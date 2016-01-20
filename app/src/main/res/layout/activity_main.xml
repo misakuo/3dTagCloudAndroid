@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/container"
     android:gravity="center"
     android:orientation="vertical"
@@ -12,6 +13,11 @@
         android:id="@+id/tag_cloud"
         android:layout_margin="10dp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        app:autoScrollMode="uniform"
+        app:lightColor="#0fe291"
+        app:darkColor="#123456"
+        app:radiusPercent="0.7"
+        app:scrollSpeed="3"/>
 
 </LinearLayout>
