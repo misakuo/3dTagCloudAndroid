@@ -13,6 +13,7 @@ public abstract class TagsAdapter {
     public abstract int getCount();
     public abstract View getView(Context context, int position, ViewGroup parent);
     public abstract Object getItem(int position);
+    public abstract int getPopularity(int position);
 
     public final void notifyDataSetChanged() {
         onDataSetChangeListener.onChange();

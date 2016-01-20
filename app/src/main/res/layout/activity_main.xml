@@ -8,4 +8,10 @@
     android:orientation="vertical"
     tools:context="com.moxun.tagcloud.MainActivity">
 
+    <com.moxun.tagcloudlib.view.TagCloudView
+        android:id="@+id/tag_cloud"
+        android:layout_margin="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
 </LinearLayout>

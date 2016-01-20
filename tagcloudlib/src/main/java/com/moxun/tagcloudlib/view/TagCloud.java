@@ -1,14 +1,9 @@
 package com.moxun.tagcloudlib.view;
 /**
- * Komodo Lab: Tagin! Project: 3D Tag Cloud
- * Google Summer of Code 2011
- *
- * @authors Reza Shiftehfar, Sara Khosravinasr and Jorge Silva
+ * Created by moxun on 16/1/19
  */
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 public class TagCloud {
@@ -16,22 +11,20 @@ public class TagCloud {
     private List<Tag> tagCloud;
     private int radius;
     private static final int DEFAULT_RADIUS = 3;
-    private static final int TEXT_SIZE_MAX = 30, TEXT_SIZE_MIN = 4;
-    private static final float[] DEFAULT_COLOR1 = {0.886f, 0.725f, 0.188f, 1f};
-    private static final float[] DEFAULT_COLOR2 = {0.3f, 0.3f, 0.3f, 1f};
-    private float[] tagColor1;  //text color 1(rgb Alpha)
-    private float[] tagColor2; //text color 2 (rgb Alpha)
-    private int textSizeMax, textSizeMin;
+    private static final float[] DEFAULT_COLOR_DARK = {0.886f, 0.725f, 0.188f, 1f};
+    private static final float[] DEFAULT_COLOR_LIGHT = {0.3f, 0.3f, 0.3f, 1f};
+    private float[] tagColorLight;  //text color 1(rgb Alpha)
+    private float[] tagColorDark; //text color 2 (rgb Alpha)
     private float sin_mAngleX, cos_mAngleX, sin_mAngleY, cos_mAngleY, sin_mAngleZ, cos_mAngleZ;
     private float mAngleZ = 0;
     private float mAngleX = 0;
     private float mAngleY = 0;
-    private int size = 0;
+    //private int size = 0;
     private int smallest, largest; //used to find spectrum for tag colors
     private boolean distrEven = true; //default is to distribute tags evenly on the Cloud
 
-    public TagCloud() {
-        this(new ArrayList<Tag>());
+    public TagCloud(int radius) {
+        this(new ArrayList<Tag>(), radius);
     }
 
     public TagCloud(List<Tag> tags) {
@@ -40,25 +33,14 @@ public class TagCloud {
 
     //Constructor just copies the existing tags in its List
     public TagCloud(List<Tag> tags, int radius) {
-        this(tags, radius, DEFAULT_COLOR1, DEFAULT_COLOR2, TEXT_SIZE_MIN, TEXT_SIZE_MAX);
-    }
-
-    public TagCloud(List<Tag> tags, int radius, int textSizeMin, int textSizeMax) {
-        this(tags, radius, DEFAULT_COLOR1, DEFAULT_COLOR2, textSizeMin, textSizeMax);
+        this(tags, radius, DEFAULT_COLOR_DARK, DEFAULT_COLOR_LIGHT);
     }
 
     public TagCloud(List<Tag> tags, int radius, float[] tagColor1, float[] tagColor2) {
-        this(tags, radius, tagColor1, tagColor2, TEXT_SIZE_MIN, TEXT_SIZE_MAX);
-    }
-
-    public TagCloud(List<Tag> tags, int radius, float[] tagColor1, float[] tagColor2,
-                    int textSizeMin, int textSizeMax) {
         this.tagCloud = tags;    //Java does the initialization and deep copying
         this.radius = radius;
-        this.tagColor1 = tagColor1;
-        this.tagColor2 = tagColor2;
-        this.textSizeMax = textSizeMax;
-        this.textSizeMin = textSizeMin;
+        this.tagColorLight = tagColor1;
+        this.tagColorDark = tagColor2;
     }
 
     //create method calculates the correct initial location of each tag
@@ -85,12 +67,18 @@ public class TagCloud {
 
             initTag(tempTag);
         }
-
-        this.size = tagCloud.size();
     }
 
     public List<Tag> getTagList() {
         return tagCloud;
+    }
+
+    public void setTagList(List<Tag> list) {
+        tagCloud = list;
+    }
+
+    public Tag get(int position) {
+        return tagCloud.get(position);
     }
 
     public int indexOf(Tag tag) {
@@ -113,9 +101,7 @@ public class TagCloud {
     private void initTag(Tag tag) {
         float percentage = getPercentage(tag);
         float[] tempColor = getColorFromGradient(percentage); //(rgb Alpha)
-        int tempTextSize = getTextSizeGradient(percentage);
         tag.setColorByArray(tempColor);
-        tag.setTextSize(tempTextSize);
     }
 
     private float getPercentage(Tag tag) {
@@ -131,29 +117,7 @@ public class TagCloud {
         position(distrEven, newTag);
         //now add the new tag to the tagCloud
         tagCloud.add(newTag);
-        this.size = tagCloud.size();
         updateAll();
-    }
-
-    //to replace an existing tag with a new one
-    //it returns the location of the replacement, if not found=> returns -1
-    public int Replace(Tag newTag, String oldTagText) {
-        int result = -1;
-        //let's go over all elements of tagCloud list and see if the oldTagText exists:
-        for (int i = 0; i < tagCloud.size(); i++) {
-            if (oldTagText.equalsIgnoreCase(tagCloud.get(i).getText())) {
-                result = i;
-                Tag tempTag = tagCloud.get(i);
-                tempTag.setPopularity(newTag.getPopularity());
-                tempTag.setText(newTag.getText());
-
-                initTag(tempTag);
-
-                newTag = tempTag;
-                break;
-            }
-        }
-        return result;
     }
 
     private void position(boolean distrEven, Tag newTag) {
@@ -227,28 +191,15 @@ public class TagCloud {
             tagCloud.get(j).setScale(per);
             tagCloud.get(j).setAlpha(per / 2);
         }
-        depthSort();
-    }
-
-    ///now let's sort all tags in the tagCloud based on their z coordinate
-    //this way, when they are finally drawn, upper tags will be drawn on top of lower tags
-    private void depthSort() {
-        Collections.sort(tagCloud);
     }
 
     private float[] getColorFromGradient(float perc) {
         float[] tempRGB = new float[4];
-        tempRGB[0] = (perc * (tagColor1[0])) + ((1 - perc) * (tagColor2[0]));
-        tempRGB[1] = (perc * (tagColor1[1])) + ((1 - perc) * (tagColor2[1]));
-        tempRGB[2] = (perc * (tagColor1[2])) + ((1 - perc) * (tagColor2[2]));
+        tempRGB[0] = (perc * (tagColorLight[0])) + ((1 - perc) * (tagColorDark[0]));
+        tempRGB[1] = (perc * (tagColorLight[1])) + ((1 - perc) * (tagColorDark[1]));
+        tempRGB[2] = (perc * (tagColorLight[2])) + ((1 - perc) * (tagColorDark[2]));
         tempRGB[3] = 1;
         return tempRGB;
-    }
-
-    private int getTextSizeGradient(float perc) {
-        int size;
-        size = (int) (perc * textSizeMax + (1 - perc) * textSizeMin);
-        return size;
     }
 
     private void sineCosine(float mAngleX, float mAngleY, float mAngleZ) {
@@ -261,77 +212,24 @@ public class TagCloud {
         cos_mAngleZ = (float) Math.cos(mAngleZ * degToRad);
     }
 
-    public int getRadius() {
-        return radius;
-    }
-
     public void setRadius(int radius) {
         this.radius = radius;
     }
 
-    public float[] getTagColor1() {
-        return tagColor1;
+    public void setTagColorLight(float[] tagColor) {
+        this.tagColorLight = tagColor;
     }
 
-    public void setTagColor1(float[] tagColor) {
-        this.tagColor1 = tagColor;
-    }
-
-    public float[] getTagColor2() {
-        return tagColor2;
-    }
-
-    public void setTagColor2(float[] tagColor2) {
-        this.tagColor2 = tagColor2;
-    }
-
-    public float getRvalue(float[] color) {
-        if (color.length > 0)
-            return color[0];
-        else
-            return 0;
-    }
-
-    public float getGvalue(float[] color) {
-        if (color.length > 0)
-            return color[1];
-        else
-            return 0;
-    }
-
-    public float getBvalue(float[] color) {
-        if (color.length > 0)
-            return color[2];
-        else
-            return 0;
-    }
-
-    public float getAlphaValue(float[] color) {
-        if (color.length >= 4)
-            return color[3];
-        else
-            return 0;
-    }
-
-    public float getAngleX() {
-        return mAngleX;
+    public void setTagColorDark(float[] tagColorDark) {
+        this.tagColorDark = tagColorDark;
     }
 
     public void setAngleX(float mAngleX) {
         this.mAngleX = mAngleX;
     }
 
-    public float getAngleY() {
-        return mAngleY;
-    }
-
     public void setAngleY(float mAngleY) {
         this.mAngleY = mAngleY;
     }
-
-    public int getSize() {
-        return size;
-    }
-
 
 }
