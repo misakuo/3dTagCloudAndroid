@@ -17,8 +17,9 @@ compile 'com.moxun:tagcloudlib:1.0.2'
 ```<com.moxun.tagcloudlib.view.TagCloudView/>```  
 
 3. 设置Adapter
-继承`TagsAdapter`，实现以下方法  
-**public int getCount();**  
+继承`TagsAdapter`，实现以下方法
+  
+    **public int getCount();**  
 *返回Tag数量*  
 **public View getView(Context context, int position, ViewGroup parent);**  
 *返回每个Tag实例*  
@@ -28,6 +29,7 @@ compile 'com.moxun:tagcloudlib:1.0.2'
 *针对每个Tag返回一个权重值，该值与ThemeColor和Tag初始大小有关*  
 **public void onThemeColorChanged(View view,int themeColor);**  
 *Tag主题色发生变化时会回调该方法*  
+ 
 4. 定制属性    
 
 | 属性        | xml           | 代码 |值类型|
@@ -37,6 +39,7 @@ compile 'com.moxun:tagcloudlib:1.0.2'
 | 滚动速度 | app:scrollSpeed      |    setScrollSpeed(float scrollSpeed) |float [0,+]
 |起始颜色|app:lightColor|setLightColor(int color)|int
 |终止颜色|app:darkColor|setDarkColor(int color)|int  
+
 
 ***
 欢迎提交PR
