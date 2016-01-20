@@ -135,6 +135,8 @@ public class TagCloudView extends ViewGroup implements Runnable, TagsAdapter.OnD
                 mTagCloud.setTagColorLight(lightColor);//higher color
                 mTagCloud.setTagColorDark(darkColor);//lower color
 
+                mTagCloud.clear();
+                removeAllViews();
                 for (int i = 0; i < tagsAdapter.getCount(); i++) {
                     TagCloudView.this.mTagCloud.add(new Tag(tagsAdapter.getPopularity(i)));
                     addView(tagsAdapter.getView(getContext(), i, TagCloudView.this));

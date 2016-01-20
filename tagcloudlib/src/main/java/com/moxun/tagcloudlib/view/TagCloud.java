@@ -73,6 +73,10 @@ public class TagCloud {
         }
     }
 
+    public void clear() {
+        tagCloud.clear();
+    }
+
     public List<Tag> getTagList() {
         return tagCloud;
     }
