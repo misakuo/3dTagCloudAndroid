@@ -8,17 +8,17 @@ TagCloudView是一个完全基于Android ViewGroup编写的控件，支持将一
 ##### Eclipse  
 copy代码，或转向Android Studio
 ##### Android Studio / IDEA
-1. 在`build.gradle`中添加  
+- 在`build.gradle`中添加  
 ```
 compile 'com.moxun:tagcloudlib:1.0.2'
 ```
 
-2. 在布局文件中引入  
+- 在布局文件中引入  
 ```  
 <com.moxun.tagcloudlib.view.TagCloudView/>  
 ```  
 
-3. 设置Adapter
+- 设置Adapter
 继承`TagsAdapter`，实现以下方法
   
     **public int getCount();**  
@@ -32,7 +32,7 @@ compile 'com.moxun:tagcloudlib:1.0.2'
 **public void onThemeColorChanged(View view,int themeColor);**  
 *Tag主题色发生变化时会回调该方法*  
  
-4. 定制属性    
+- 定制属性    
 
 | 属性        | xml           | 代码 |值类型|
 |:------------: |:-------------:| :----:|:-:
