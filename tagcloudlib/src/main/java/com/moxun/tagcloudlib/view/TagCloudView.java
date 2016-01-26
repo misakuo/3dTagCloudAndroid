@@ -32,6 +32,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.graphics.Point;
 
 import com.moxun.tagcloudlib.R;
 
@@ -53,6 +54,9 @@ public class TagCloudView extends ViewGroup implements Runnable, TagsAdapter.OnD
     public static final int MODE_DECELERATE = 1;
     public static final int MODE_UNIFORM = 2;
     public int mode;
+
+    private MarginLayoutParams layoutParams;
+    private int minSize;    
 
     private boolean isOnTouch = false;
     private Handler handler = new Handler(Looper.getMainLooper());
@@ -97,6 +101,13 @@ public class TagCloudView extends ViewGroup implements Runnable, TagsAdapter.OnD
             float s = typedArray.getFloat(R.styleable.TagCloudView_scrollSpeed,2f);
             setScrollSpeed(s);
         }
+
+        WindowManager wm = (WindowManager) getContext() .getSystemService(Context.WINDOW_SERVICE);
+        Point point = new Point();
+        wm.getDefaultDisplay().getSize(point);
+        int screenWidth = point.x;
+        int screenHeight = point.y;
+        minSize = screenHeight < screenWidth ? screenHeight : screenWidth;        
     }
 
     public void setAutoScrollMode(int mode) {
@@ -182,12 +193,13 @@ public class TagCloudView extends ViewGroup implements Runnable, TagsAdapter.OnD
         int heightMode = MeasureSpec.getMode(heightMeasureSpec);
 
         measureChildren(widthMode, heightMode);
-        WindowManager wm = (WindowManager) getContext()
-                .getSystemService(Context.WINDOW_SERVICE);
-        MarginLayoutParams layoutParams = (MarginLayoutParams) getLayoutParams();
-        int screenWidth = wm.getDefaultDisplay().getWidth();
-        int dimensionX = widthMode == MeasureSpec.EXACTLY ? contentWidth  : screenWidth - layoutParams.leftMargin - layoutParams.rightMargin;
-        int dimensionY  = heightMode == MeasureSpec.EXACTLY ? contentHeight : screenWidth - layoutParams.leftMargin - layoutParams.rightMargin;
+
+        if(layoutParams == null) {
+            layoutParams = (MarginLayoutParams) getLayoutParams();
+        }
+
+        int dimensionX = widthMode == MeasureSpec.EXACTLY ? contentWidth  : minSize - layoutParams.leftMargin - layoutParams.rightMargin;
+        int dimensionY  = heightMode == MeasureSpec.EXACTLY ? contentHeight : minSize - layoutParams.leftMargin - layoutParams.rightMargin;
         setMeasuredDimension(dimensionX, dimensionY);
     }
 
