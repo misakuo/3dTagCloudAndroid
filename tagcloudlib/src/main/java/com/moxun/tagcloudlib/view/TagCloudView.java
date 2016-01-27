@@ -54,6 +54,7 @@ public class TagCloudView extends ViewGroup implements Runnable, TagsAdapter.OnD
     public static final int MODE_DECELERATE = 1;
     public static final int MODE_UNIFORM = 2;
     public int mode;
+    private int left, right, top, bottom;
 
     private MarginLayoutParams layoutParams;
     private int minSize;    
@@ -216,11 +217,16 @@ public class TagCloudView extends ViewGroup implements Runnable, TagsAdapter.OnD
     }
 
     private void updateChild() {
-        requestLayout();
+        onLayout(false, left,top,right,bottom);
     }
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
+        left = l; 
+        right = r; 
+        top = t; 
+        bottom = b;
+        
         for (int i = 0; i < getChildCount(); i++) {
             View child = getChildAt(i);
             if (child.getVisibility() != GONE) {
