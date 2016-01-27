@@ -22,9 +22,11 @@ package com.moxun.tagcloudlib.view;
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.AttributeSet;
@@ -105,7 +107,12 @@ public class TagCloudView extends ViewGroup implements Runnable, TagsAdapter.OnD
 
         WindowManager wm = (WindowManager) getContext() .getSystemService(Context.WINDOW_SERVICE);
         Point point = new Point();
-        wm.getDefaultDisplay().getSize(point);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+            wm.getDefaultDisplay().getSize(point);
+        } else {
+            point.x = wm.getDefaultDisplay().getWidth();
+            point.y = wm.getDefaultDisplay().getHeight();
+        }
         int screenWidth = point.x;
         int screenHeight = point.y;
         minSize = screenHeight < screenWidth ? screenHeight : screenWidth;        
@@ -216,6 +223,7 @@ public class TagCloudView extends ViewGroup implements Runnable, TagsAdapter.OnD
         handler.removeCallbacksAndMessages(null);
     }
 
+    @SuppressLint("WrongCall")
     private void updateChild() {
         onLayout(false, left,top,right,bottom);
     }
