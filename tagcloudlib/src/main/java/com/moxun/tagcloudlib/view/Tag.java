@@ -1,6 +1,7 @@
 package com.moxun.tagcloudlib.view;
 
 import android.graphics.Color;
+import android.util.Log;
 
 /**
  * Copyright © 2016 moxun
@@ -132,9 +133,10 @@ public class Tag {
     public int getColor() {
         int[] result = new int[4];
         for (int i = 0; i < 4; i++) {
-            result[i] = (int) (this.argb[i] * 256);
+            result[i] = (int) (this.argb[i] * 0xff);
         }
         int color = Color.argb(result[0], result[1], result[2], result[3]);
+        Log.e("TAG","#" + Integer.toHexString(color));
         return color;
     }
 }

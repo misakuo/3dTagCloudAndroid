@@ -15,8 +15,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:autoScrollMode="uniform"
-        app:lightColor="#0fe291"
-        app:darkColor="#123456"
+        app:lightColor="#ffff0000"
+        app:darkColor="#ff00ff00"
         app:radiusPercent="0.5"
         app:scrollSpeed="3"/>
 

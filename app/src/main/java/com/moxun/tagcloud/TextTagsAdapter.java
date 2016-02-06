@@ -48,7 +48,7 @@ public class TextTagsAdapter extends TagsAdapter {
 
     @Override
     public int getPopularity(int position) {
-        return Math.abs(new Random().nextInt(5) + 2);
+        return position % 7;
     }
 
     @Override

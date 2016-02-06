@@ -49,8 +49,8 @@ public class TagCloudView extends ViewGroup implements Runnable, TagsAdapter.OnD
     private float radius;
     private float radiusPercent = 0.9f;
 
-    private float[] darkColor  = new float[]{1f, 0f, 0f, 1};
-    private float[] lightColor = new float[]{0.9412f, 0.7686f, 0.2f, 1};
+    private float[] darkColor  = new float[]{1f, 0f, 0f, 1f};//rgba
+    private float[] lightColor = new float[]{0.9412f, 0.7686f, 0.2f, 1f};//rgba
 
     public static final int MODE_DISABLE = 0;
     public static final int MODE_DECELERATE = 1;
@@ -68,23 +68,21 @@ public class TagCloudView extends ViewGroup implements Runnable, TagsAdapter.OnD
 
     public TagCloudView(Context context) {
         super(context);
-        setFocusableInTouchMode(true);
         init(context,null);
     }
 
     public TagCloudView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        setFocusableInTouchMode(true);
         init(context,attrs);
     }
 
     public TagCloudView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        setFocusableInTouchMode(true);
         init(context,attrs);
     }
 
     private void init(Context context, AttributeSet attrs) {
+        setFocusableInTouchMode(true);
         mTagCloud = new TagCloud();
         if (attrs != null) {
             TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.TagCloudView);
@@ -92,10 +90,10 @@ public class TagCloudView extends ViewGroup implements Runnable, TagsAdapter.OnD
             String m = typedArray.getString(R.styleable.TagCloudView_autoScrollMode);
             mode = Integer.valueOf(m);
 
-            int light = typedArray.getColor(R.styleable.TagCloudView_lightColor,Color.GREEN);
+            int light = typedArray.getColor(R.styleable.TagCloudView_lightColor,Color.WHITE);
             setLightColor(light);
 
-            int dark = typedArray.getColor(R.styleable.TagCloudView_darkColor,Color.GRAY);
+            int dark = typedArray.getColor(R.styleable.TagCloudView_darkColor,Color.BLACK);
             setDarkColor(dark);
 
             float p = typedArray.getFloat(R.styleable.TagCloudView_radiusPercent,radiusPercent);
@@ -103,6 +101,8 @@ public class TagCloudView extends ViewGroup implements Runnable, TagsAdapter.OnD
 
             float s = typedArray.getFloat(R.styleable.TagCloudView_scrollSpeed,2f);
             setScrollSpeed(s);
+
+            typedArray.recycle();
         }
 
         WindowManager wm = (WindowManager) getContext() .getSystemService(Context.WINDOW_SERVICE);
@@ -130,10 +130,10 @@ public class TagCloudView extends ViewGroup implements Runnable, TagsAdapter.OnD
 
     public void setLightColor(int color) {
         float[] argb = new float[4];
-        argb[0] = Color.alpha(color) /1.0f / 255;
-        argb[1] = Color.red(color) /1.0f / 255;
-        argb[2] = Color.green(color) /1.0f / 255;
-        argb[3] = Color.blue(color) /1.0f / 255;
+        argb[3] = Color.alpha(color) /1.0f / 0xff;
+        argb[0] = Color.red(color) /1.0f / 0xff;
+        argb[1] = Color.green(color) /1.0f / 0xff;
+        argb[2] = Color.blue(color) /1.0f / 0xff;
 
         lightColor = argb.clone();
         onChange();
@@ -141,10 +141,10 @@ public class TagCloudView extends ViewGroup implements Runnable, TagsAdapter.OnD
 
     public void setDarkColor(int color) {
         float[] argb = new float[4];
-        argb[0] = Color.alpha(color) /1.0f / 255;
-        argb[1] = Color.red(color) /1.0f / 255;
-        argb[2] = Color.green(color) /1.0f / 255;
-        argb[3] = Color.blue(color) /1.0f / 255;
+        argb[3] = Color.alpha(color) /1.0f / 0xff;
+        argb[0] = Color.red(color) /1.0f / 0xff;
+        argb[1] = Color.green(color) /1.0f / 0xff;
+        argb[2] = Color.blue(color) /1.0f / 0xff;
 
         darkColor = argb.clone();
         onChange();

@@ -22,6 +22,8 @@ package com.moxun.tagcloudlib.view;
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -132,8 +134,8 @@ public class TagCloud {
 
     private void initTag(Tag tag) {
         float percentage = getPercentage(tag);
-        float[] tempColor = getColorFromGradient(percentage); //(rgb Alpha)
-        tag.setColorByArray(tempColor);
+        float[] argb = getColorFromGradient(percentage);
+        tag.setColorByArray(argb);
     }
 
     private float getPercentage(Tag tag) {
@@ -225,13 +227,14 @@ public class TagCloud {
         }
     }
 
-    private float[] getColorFromGradient(float perc) {
-        float[] tempRGB = new float[4];
-        tempRGB[0] = (perc * (tagColorLight[0])) + ((1 - perc) * (tagColorDark[0]));
-        tempRGB[1] = (perc * (tagColorLight[1])) + ((1 - perc) * (tagColorDark[1]));
-        tempRGB[2] = (perc * (tagColorLight[2])) + ((1 - perc) * (tagColorDark[2]));
-        tempRGB[3] = 1;
-        return tempRGB;
+    private float[] getColorFromGradient(float percentage) {
+        //perc: 1.0 full dark; 0.0 full light
+        float[] rgba = new float[4];
+        rgba[0] = 1f; //Alpha is 1.0 when init.
+        rgba[1] = (percentage * (tagColorDark[0])) + ((1f - percentage) * (tagColorLight[0]));
+        rgba[2] = (percentage * (tagColorDark[1])) + ((1f - percentage) * (tagColorLight[1]));
+        rgba[3] = (percentage * (tagColorDark[2])) + ((1f - percentage) * (tagColorLight[2]));
+        return rgba;
     }
 
     private void sineCosine(float mAngleX, float mAngleY, float mAngleZ) {
