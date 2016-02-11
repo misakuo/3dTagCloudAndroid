@@ -28,7 +28,7 @@ compile 'com.moxun:tagcloudlib:1.1.0'
 **public Object getItem(int position);**  
 *返回Tag数据*  
 **public int getPopularity(int position);**  
-*针对每个Tag返回一个权重值，该值与ThemeColor和Tag初始大小有关*  
+*针对每个Tag返回一个权重值，该值与ThemeColor和Tag初始大小有关；一个简单的权重值生成方式是对一个数N取余或使用随机数*  
 **public void onThemeColorChanged(View view,int themeColor);**  
 *Tag主题色发生变化时会回调该方法*  
  
