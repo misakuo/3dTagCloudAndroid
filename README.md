@@ -10,7 +10,7 @@ copy代码，或转向Android Studio
 ##### Android Studio / IDEA
 - 在`build.gradle`中添加  
 ```
-compile 'com.moxun:tagcloudlib:1.0.3'
+compile 'com.moxun:tagcloudlib:1.1.0'
 ```
 
 - 在布局文件中引入  
@@ -18,7 +18,7 @@ compile 'com.moxun:tagcloudlib:1.0.3'
 <com.moxun.tagcloudlib.view.TagCloudView/>  
 ```  
 
-- 设置Adapter
+- 设置Adapter    
 继承`TagsAdapter`，实现以下方法
   
     **public int getCount();**  
