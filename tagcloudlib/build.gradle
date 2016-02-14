@@ -73,6 +73,7 @@ artifacts {
     archives javadocJar
     archives sourcesJar
 }
+println "build on " + System.getProperties().toString()
 Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
 bintray {
