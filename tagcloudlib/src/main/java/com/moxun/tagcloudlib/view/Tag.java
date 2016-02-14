@@ -136,7 +136,7 @@ public class Tag {
             result[i] = (int) (this.argb[i] * 0xff);
         }
         int color = Color.argb(result[0], result[1], result[2], result[3]);
-        Log.e("TAG","#" + Integer.toHexString(color));
+        //Log.e("TAG","#" + Integer.toHexString(color));
         return color;
     }
 }
