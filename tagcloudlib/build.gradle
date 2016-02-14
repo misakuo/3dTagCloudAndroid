@@ -73,9 +73,18 @@ artifacts {
     archives javadocJar
     archives sourcesJar
 }
-println "build on " + System.getProperties().toString()
+
 Properties properties = new Properties()
-properties.load(project.rootProject.file('local.properties').newDataInputStream())
+File file = project.rootProject.file('local.properties')
+if(file != null && file.exists()) {
+    println("Building on local machine......")
+    properties.load(file.newDataInputStream())
+} else {
+    println("Building on Travis......")
+    properties.put("bintray.user",System.getenv("USER"))
+    properties.put("bintray.apikey",System.getenv("TOKEN"))
+}
+
 bintray {
     user = properties.getProperty("bintray.user")
     key = properties.getProperty("bintray.apikey")
