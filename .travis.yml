@@ -19,7 +19,7 @@ android:
 
     # Specify at least one system image,
     # if you need to run emulator(s) during your tests
-    - sys-img-armeabi-v7a-android-21
+    #- sys-img-armeabi-v7a-android-21
 
   licenses:
       - 'android-sdk-license-.+'
@@ -30,16 +30,17 @@ env:
     - ADB_INSTALL_TIMEOUT=8
 
 # Emulator Management: Create, Start and Wait
-before_script:
-  - echo no | android create avd --force -n test -t android-21 --abi armeabi-v7a
-  - emulator -avd test -no-skin -no-audio -no-window -gpu off -no-boot-anim &
-  - android-wait-for-emulator
-  - adb devices
-  - adb shell input keyevent 82 &
+#before_script:
+#  - echo no | android create avd --force -n test -t android-21 --abi armeabi-v7a
+#  - emulator -avd test -no-skin -no-audio -no-window -gpu off -no-boot-anim &
+#  - android-wait-for-emulator
+#  - adb devices
+#  - adb shell input keyevent 82 &
 
 script:
-  - android list target
-  - ./gradlew connectedAndroidTest
+  #- android list target
+  #- ./gradlew connectedAndroidTest
+  - ./gradlew assembleDebug
 
 notifications:
   email: false
