@@ -9,7 +9,7 @@ TagCloudView是一个完全基于Android ViewGroup编写的控件，支持将一
 
 ###使用
 ##### Eclipse  
-copy代码，或转向Android Studio
+copy代码，或使用ADT的maven插件
 ##### Android Studio / IDEA
 - 在`build.gradle`中添加  
 ```
