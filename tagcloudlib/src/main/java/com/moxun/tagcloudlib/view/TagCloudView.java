@@ -2,17 +2,17 @@ package com.moxun.tagcloudlib.view;
 
 /**
  * Copyright © 2016 moxun
- *
+ * <p/>
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the “Software”),
  * to deal in the Software without restriction, including without limitation the
  * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
  * sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- *
+ * <p/>
  * The above copyright notice and this permission notice shall be
  * included in all copies or substantial portions of the Software.
- *
+ * <p/>
  * THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND,
  * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
@@ -26,15 +26,16 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.graphics.Point;
 
 import com.moxun.tagcloudlib.R;
 
@@ -49,7 +50,7 @@ public class TagCloudView extends ViewGroup implements Runnable, TagsAdapter.OnD
     private float radius;
     private float radiusPercent = 0.9f;
 
-    private float[] darkColor  = new float[]{1f, 0f, 0f, 1f};//rgba
+    private float[] darkColor = new float[]{1f, 0f, 0f, 1f};//rgba
     private float[] lightColor = new float[]{0.9412f, 0.7686f, 0.2f, 1f};//rgba
 
     public static final int MODE_DISABLE = 0;
@@ -59,7 +60,7 @@ public class TagCloudView extends ViewGroup implements Runnable, TagsAdapter.OnD
     private int left, right, top, bottom;
 
     private MarginLayoutParams layoutParams;
-    private int minSize;    
+    private int minSize;
 
     private boolean isOnTouch = false;
     private Handler handler = new Handler(Looper.getMainLooper());
@@ -68,17 +69,17 @@ public class TagCloudView extends ViewGroup implements Runnable, TagsAdapter.OnD
 
     public TagCloudView(Context context) {
         super(context);
-        init(context,null);
+        init(context, null);
     }
 
     public TagCloudView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init(context,attrs);
+        init(context, attrs);
     }
 
     public TagCloudView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init(context,attrs);
+        init(context, attrs);
     }
 
     private void init(Context context, AttributeSet attrs) {
@@ -90,22 +91,22 @@ public class TagCloudView extends ViewGroup implements Runnable, TagsAdapter.OnD
             String m = typedArray.getString(R.styleable.TagCloudView_autoScrollMode);
             mode = Integer.valueOf(m);
 
-            int light = typedArray.getColor(R.styleable.TagCloudView_lightColor,Color.WHITE);
+            int light = typedArray.getColor(R.styleable.TagCloudView_lightColor, Color.WHITE);
             setLightColor(light);
 
-            int dark = typedArray.getColor(R.styleable.TagCloudView_darkColor,Color.BLACK);
+            int dark = typedArray.getColor(R.styleable.TagCloudView_darkColor, Color.BLACK);
             setDarkColor(dark);
 
-            float p = typedArray.getFloat(R.styleable.TagCloudView_radiusPercent,radiusPercent);
+            float p = typedArray.getFloat(R.styleable.TagCloudView_radiusPercent, radiusPercent);
             setRadiusPercent(p);
 
-            float s = typedArray.getFloat(R.styleable.TagCloudView_scrollSpeed,2f);
+            float s = typedArray.getFloat(R.styleable.TagCloudView_scrollSpeed, 2f);
             setScrollSpeed(s);
 
             typedArray.recycle();
         }
 
-        WindowManager wm = (WindowManager) getContext() .getSystemService(Context.WINDOW_SERVICE);
+        WindowManager wm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
         Point point = new Point();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
             wm.getDefaultDisplay().getSize(point);
@@ -115,7 +116,7 @@ public class TagCloudView extends ViewGroup implements Runnable, TagsAdapter.OnD
         }
         int screenWidth = point.x;
         int screenHeight = point.y;
-        minSize = screenHeight < screenWidth ? screenHeight : screenWidth;        
+        minSize = screenHeight < screenWidth ? screenHeight : screenWidth;
     }
 
     public void setAutoScrollMode(int mode) {
@@ -130,10 +131,10 @@ public class TagCloudView extends ViewGroup implements Runnable, TagsAdapter.OnD
 
     public void setLightColor(int color) {
         float[] argb = new float[4];
-        argb[3] = Color.alpha(color) /1.0f / 0xff;
-        argb[0] = Color.red(color) /1.0f / 0xff;
-        argb[1] = Color.green(color) /1.0f / 0xff;
-        argb[2] = Color.blue(color) /1.0f / 0xff;
+        argb[3] = Color.alpha(color) / 1.0f / 0xff;
+        argb[0] = Color.red(color) / 1.0f / 0xff;
+        argb[1] = Color.green(color) / 1.0f / 0xff;
+        argb[2] = Color.blue(color) / 1.0f / 0xff;
 
         lightColor = argb.clone();
         onChange();
@@ -141,10 +142,10 @@ public class TagCloudView extends ViewGroup implements Runnable, TagsAdapter.OnD
 
     public void setDarkColor(int color) {
         float[] argb = new float[4];
-        argb[3] = Color.alpha(color) /1.0f / 0xff;
-        argb[0] = Color.red(color) /1.0f / 0xff;
-        argb[1] = Color.green(color) /1.0f / 0xff;
-        argb[2] = Color.blue(color) /1.0f / 0xff;
+        argb[3] = Color.alpha(color) / 1.0f / 0xff;
+        argb[0] = Color.red(color) / 1.0f / 0xff;
+        argb[1] = Color.green(color) / 1.0f / 0xff;
+        argb[2] = Color.blue(color) / 1.0f / 0xff;
 
         darkColor = argb.clone();
         onChange();
@@ -202,12 +203,12 @@ public class TagCloudView extends ViewGroup implements Runnable, TagsAdapter.OnD
 
         measureChildren(widthMode, heightMode);
 
-        if(layoutParams == null) {
+        if (layoutParams == null) {
             layoutParams = (MarginLayoutParams) getLayoutParams();
         }
 
-        int dimensionX = widthMode == MeasureSpec.EXACTLY ? contentWidth  : minSize - layoutParams.leftMargin - layoutParams.rightMargin;
-        int dimensionY  = heightMode == MeasureSpec.EXACTLY ? contentHeight : minSize - layoutParams.leftMargin - layoutParams.rightMargin;
+        int dimensionX = widthMode == MeasureSpec.EXACTLY ? contentWidth : minSize - layoutParams.leftMargin - layoutParams.rightMargin;
+        int dimensionY = heightMode == MeasureSpec.EXACTLY ? contentHeight : minSize - layoutParams.leftMargin - layoutParams.rightMargin;
         setMeasuredDimension(dimensionX, dimensionY);
     }
 
@@ -225,21 +226,21 @@ public class TagCloudView extends ViewGroup implements Runnable, TagsAdapter.OnD
 
     @SuppressLint("WrongCall")
     private void updateChild() {
-        onLayout(false, left,top,right,bottom);
+        onLayout(false, left, top, right, bottom);
     }
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        left = l; 
-        right = r; 
-        top = t; 
+        left = l;
+        right = r;
+        top = t;
         bottom = b;
-        
+
         for (int i = 0; i < getChildCount(); i++) {
             View child = getChildAt(i);
             if (child.getVisibility() != GONE) {
                 Tag tag = mTagCloud.get(i);
-                tagsAdapter.onThemeColorChanged(child,tag.getColor());
+                tagsAdapter.onThemeColorChanged(child, tag.getColor());
                 child.setScaleX(tag.getScale());
                 child.setScaleY(tag.getScale());
                 int left, top;
@@ -273,31 +274,45 @@ public class TagCloudView extends ViewGroup implements Runnable, TagsAdapter.OnD
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent e) {
-        float x = e.getX();
-        float y = e.getY();
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        handleTouchEvent(ev);
+        return false;
+    }
 
+    @Override
+    public boolean onTouchEvent(MotionEvent e) {
+        handleTouchEvent(e);
+        return true;
+    }
+
+    private float downX, downY;
+
+    private void handleTouchEvent(MotionEvent e) {
         switch (e.getAction()) {
             case MotionEvent.ACTION_DOWN:
+                downX = e.getX();
+                downY = e.getY();
                 isOnTouch = true;
-                break;
             case MotionEvent.ACTION_MOVE:
                 //rotate elements depending on how far the selection point is from center of cloud
-                float dx = x - centerX;
-                float dy = y - centerY;
-                mAngleX = (dy / radius) * tspeed * TOUCH_SCALE_FACTOR;
-                mAngleY = (-dx / radius) * tspeed * TOUCH_SCALE_FACTOR;
-
-                processTouch();
-
+                float dx = e.getX() - downX;
+                float dy = e.getY() - downY;
+                if (isValidMove(dx, dy)) {
+                    mAngleX = (dy / radius) * tspeed * TOUCH_SCALE_FACTOR;
+                    mAngleY = (-dx / radius) * tspeed * TOUCH_SCALE_FACTOR;
+                    processTouch();
+                }
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
                 isOnTouch = false;
                 break;
         }
+    }
 
-        return true;
+    private boolean isValidMove(float dx, float dy) {
+        int minDistance = ViewConfiguration.get(getContext()).getScaledTouchSlop();
+        return (Math.abs(dx) > minDistance || Math.abs(dy) > minDistance);
     }
 
     private void processTouch() {

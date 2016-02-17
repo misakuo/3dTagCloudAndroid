@@ -2,6 +2,7 @@ package com.moxun.tagcloud;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,12 +33,18 @@ public class TextTagsAdapter extends TagsAdapter {
     }
 
     @Override
-    public View getView(Context context, int position, ViewGroup parent) {
+    public View getView(Context context, final int position, ViewGroup parent) {
         TextView tv = new TextView(context);
         ViewGroup.MarginLayoutParams lp = new ViewGroup.MarginLayoutParams(100, 100);
         tv.setLayoutParams(lp);
         tv.setText("No." + position);
         tv.setGravity(Gravity.CENTER);
+        tv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.e("Click","Tag " + position + " clicked.");
+            }
+        });
         return tv;
     }
 
