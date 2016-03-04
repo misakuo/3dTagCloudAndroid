@@ -1,5 +1,6 @@
 package com.moxun.tagcloud;
 
+import android.app.Application;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -7,6 +8,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.moxun.tagcloudlib.view.TagsAdapter;
 
@@ -24,7 +26,7 @@ public class TextTagsAdapter extends TagsAdapter {
 
     public TextTagsAdapter(@NonNull String... data) {
         dataSet.clear();
-        Collections.addAll(dataSet,data);
+        Collections.addAll(dataSet, data);
     }
 
     @Override
@@ -33,16 +35,17 @@ public class TextTagsAdapter extends TagsAdapter {
     }
 
     @Override
-    public View getView(Context context, final int position, ViewGroup parent) {
+    public View getView(final Context context, final int position, ViewGroup parent) {
         TextView tv = new TextView(context);
-        ViewGroup.MarginLayoutParams lp = new ViewGroup.MarginLayoutParams(100, 100);
+        ViewGroup.MarginLayoutParams lp = new ViewGroup.MarginLayoutParams(200, 100);
         tv.setLayoutParams(lp);
         tv.setText("No." + position);
         tv.setGravity(Gravity.CENTER);
         tv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.e("Click","Tag " + position + " clicked.");
+                Log.e("Click", "Tag " + position + " clicked.");
+                Toast.makeText(context, "Tag " + position + " clicked", Toast.LENGTH_SHORT).show();
             }
         });
         return tv;
@@ -60,6 +63,6 @@ public class TextTagsAdapter extends TagsAdapter {
 
     @Override
     public void onThemeColorChanged(View view, int themeColor) {
-        ((TextView)view).setTextColor(themeColor);
+        ((TextView) view).setTextColor(themeColor);
     }
 }

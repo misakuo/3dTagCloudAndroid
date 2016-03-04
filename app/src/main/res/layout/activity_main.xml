@@ -11,13 +11,24 @@
 
     <com.moxun.tagcloudlib.view.TagCloudView
         android:id="@+id/tag_cloud"
-        android:layout_margin="40dp"
+        android:layout_margin="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:autoScrollMode="uniform"
         app:lightColor="#ffff0000"
         app:darkColor="#ff00ff00"
-        app:radiusPercent="0.5"
+        app:radiusPercent="0.6"
         app:scrollSpeed="3"/>
+
+    <Button
+        android:id="@+id/tag_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Simple Text Tag"/>
+    <Button
+        android:id="@+id/tag_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Custom View Tag"/>
 
 </LinearLayout>
