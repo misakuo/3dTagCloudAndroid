@@ -176,7 +176,8 @@ public class TagCloudView extends ViewGroup implements Runnable, TagsAdapter.OnD
                 removeAllViews();
                 for (int i = 0; i < tagsAdapter.getCount(); i++) {
                     TagCloudView.this.mTagCloud.add(new Tag(tagsAdapter.getPopularity(i)));
-                    addView(tagsAdapter.getView(getContext(), i, TagCloudView.this));
+                    View view = tagsAdapter.getView(getContext(), i, TagCloudView.this);
+                    addView(view);
                 }
 
                 mTagCloud.create(true);
@@ -201,8 +202,6 @@ public class TagCloudView extends ViewGroup implements Runnable, TagsAdapter.OnD
         int widthMode = MeasureSpec.getMode(widthMeasureSpec);
         int heightMode = MeasureSpec.getMode(heightMeasureSpec);
 
-        measureChildren(widthMode, heightMode);
-
         if (layoutParams == null) {
             layoutParams = (MarginLayoutParams) getLayoutParams();
         }
@@ -210,6 +209,8 @@ public class TagCloudView extends ViewGroup implements Runnable, TagsAdapter.OnD
         int dimensionX = widthMode == MeasureSpec.EXACTLY ? contentWidth : minSize - layoutParams.leftMargin - layoutParams.rightMargin;
         int dimensionY = heightMode == MeasureSpec.EXACTLY ? contentHeight : minSize - layoutParams.leftMargin - layoutParams.rightMargin;
         setMeasuredDimension(dimensionX, dimensionY);
+
+        measureChildren(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
     }
 
     @Override

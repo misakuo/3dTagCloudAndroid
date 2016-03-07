@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 
-version = "1.1.1"
+version = "1.1.2"
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.1"
@@ -43,7 +43,7 @@ install {
                 }
                 developers {
                     developer {
-                        id 'misakuo'       //填写开发者基本信息
+                        id 'misakuo'       //开发者基本信息
                         name 'moxun'
                         email 'furmint@foxmail.com'
                     }
@@ -77,10 +77,10 @@ artifacts {
 Properties properties = new Properties()
 File file = project.rootProject.file('local.properties')
 if(file != null && file.exists()) {
-    println("Building on local machine......")
+    println("\nBuilding on local machine......")
     properties.load(file.newDataInputStream())
 } else {
-    println("Building on Travis......")
+    println("\nBuilding on Travis......")
     properties.put("bintray.user",System.getenv("USER"))
     properties.put("bintray.apikey",System.getenv("TOKEN"))
 }

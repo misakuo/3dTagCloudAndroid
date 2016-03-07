@@ -1,6 +1,5 @@
 package com.moxun.tagcloud;
 
-import android.app.Application;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -15,7 +14,6 @@ import com.moxun.tagcloudlib.view.TagsAdapter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 /**
  * Created by moxun on 16/1/19.
@@ -37,8 +35,6 @@ public class TextTagsAdapter extends TagsAdapter {
     @Override
     public View getView(final Context context, final int position, ViewGroup parent) {
         TextView tv = new TextView(context);
-        ViewGroup.MarginLayoutParams lp = new ViewGroup.MarginLayoutParams(200, 100);
-        tv.setLayoutParams(lp);
         tv.setText("No." + position);
         tv.setGravity(Gravity.CENTER);
         tv.setOnClickListener(new View.OnClickListener() {

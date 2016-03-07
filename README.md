@@ -13,7 +13,7 @@ copy代码，或使用ADT的maven插件
 ##### Android Studio / IDEA
 - 在`build.gradle`中添加  
 ```
-compile 'com.moxun:tagcloudlib:1.1.1'
+compile 'com.moxun:tagcloudlib:1.1.2'
 ```
 
 - 在布局文件中引入  
