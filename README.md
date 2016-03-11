@@ -1,8 +1,8 @@
 # TagCloudView    
-[ ![Download](https://api.bintray.com/packages/misakuo/maven/tagcloudview/images/download.svg) ](https://bintray.com/misakuo/maven/tagcloudview/_latestVersion)
+[![Download](https://api.bintray.com/packages/misakuo/maven/tagcloudview/images/download.svg) ](https://bintray.com/misakuo/maven/tagcloudview/_latestVersion)
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-TagCloudAndroid-brightgreen.svg?style=flat)](http://www.android-arsenal.com/details/1/3060)
 [![Build Status](https://travis-ci.org/misakuo/3dTagCloudAndroid.svg?branch=master)](https://travis-ci.org/misakuo/3dTagCloudAndroid)
-[![Android Gems](http://www.android-gems.com/lib/misakuo/3dTagCloudAndroid)](http://www.android-gems.com/badge/misakuo/3dTagCloudAndroid.svg)
+[![Android Gems](http://www.android-gems.com/badge/misakuo/3dTagCloudAndroid.svg)](http://www.android-gems.com/lib/misakuo/3dTagCloudAndroid)
 ###Sample
 ![Sample APP](http://7fvfii.com1.z0.glb.clouddn.com/sample_qrcode.png)    
 扫码下载示例APK
