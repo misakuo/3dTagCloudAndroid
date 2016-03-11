@@ -1,7 +1,10 @@
 # TagCloudView    
 [ ![Download](https://api.bintray.com/packages/misakuo/maven/tagcloudview/images/download.svg) ](https://bintray.com/misakuo/maven/tagcloudview/_latestVersion)
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-TagCloudAndroid-brightgreen.svg?style=flat)](http://www.android-arsenal.com/details/1/3060)
-[![Build Status](https://travis-ci.org/misakuo/3dTagCloudAndroid.svg?branch=master)](https://travis-ci.org/misakuo/3dTagCloudAndroid)
+[![Build Status](https://travis-ci.org/misakuo/3dTagCloudAndroid.svg?branch=master)](https://travis-ci.org/misakuo/3dTagCloudAndroid)      
+###Sample
+![Sample APP](http://7fvfii.com1.z0.glb.clouddn.com/sample_qrcode.png)    
+扫码下载示例APK
 ###简介
 TagCloudView是一个完全基于Android ViewGroup编写的控件，支持将一组View展示为一个3D球形集合，并支持全方向滚动。
 ###UI效果
