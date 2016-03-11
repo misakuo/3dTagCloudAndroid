@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="30dp"
+    android:height="29dp"
+    android:viewportHeight="29"
+    android:viewportWidth="30">
+    <group
+        android:name="图形"
+        android:translateX="0.0"
+        android:translateY="0.0">
+        <path
+            android:name="Shape"
+            android:pathData="M24.2544512,28.6066525 L15,23.4072998 L5.74551584,28.6066525 L7.81223126,18.1663875 L0.0286011935,10.9415817 L10.5568375,9.6888899 L15,0.0210890645 L19.4431625,9.6888899 L29.9713988,10.9415817 L22.1877357,18.1663876 L24.2544512,28.6066525 L24.2544512,28.6066525 Z M15,21.9919353 L22.5239744,26.2187841 L20.8428803,17.7301291 L27.1768156,11.8520272 L18.6104553,10.8325171 L15,2.97593523 L11.3895447,10.8325171 L2.82318442,11.8520272 L9.15711968,17.730129 L7.47602565,26.218784 L15,21.9919353 L15,21.9919353 Z"
+            android:fillColor="#ffffff"/>
+    </group>
+</vector>

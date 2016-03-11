@@ -12,6 +12,7 @@ public class MainActivity extends AppCompatActivity {
     private TagCloudView tagCloudView;
     private TextTagsAdapter textTagsAdapter;
     private ViewTagsAdapter viewTagsAdapter;
+    private VectorTagsAdapter vectorTagsAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
 
         textTagsAdapter = new TextTagsAdapter(new String[20]);
         viewTagsAdapter = new ViewTagsAdapter();
+        vectorTagsAdapter = new VectorTagsAdapter();
 
         tagCloudView.setAdapter(textTagsAdapter);
 
@@ -36,6 +38,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 tagCloudView.setAdapter(viewTagsAdapter);
+            }
+        });
+
+        findViewById(R.id.tag_vector).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tagCloudView.setAdapter(vectorTagsAdapter);
             }
         });
     }

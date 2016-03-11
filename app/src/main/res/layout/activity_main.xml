@@ -9,14 +9,29 @@
     android:orientation="vertical"
     tools:context="com.moxun.tagcloud.MainActivity">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:orientation="horizontal">
+        <View
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:background="@color/tagLight"
+            android:layout_height="match_parent"/>
+        <View
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:background="@color/tagDark"
+            android:layout_height="match_parent"/>
+    </LinearLayout>
     <com.moxun.tagcloudlib.view.TagCloudView
         android:id="@+id/tag_cloud"
         android:layout_margin="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:autoScrollMode="uniform"
-        app:lightColor="#ffff0000"
-        app:darkColor="#ff00ff00"
+        app:lightColor="@color/tagLight"
+        app:darkColor="@color/tagDark"
         app:radiusPercent="0.6"
         app:scrollSpeed="3"/>
 
@@ -30,5 +45,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Custom View Tag"/>
+    <Button
+        android:id="@+id/tag_vector"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="VectorDrawable Tag"/>
 
 </LinearLayout>
