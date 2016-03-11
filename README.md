@@ -6,7 +6,7 @@
 TagCloudView是一个完全基于Android ViewGroup编写的控件，支持将一组View展示为一个3D球形集合，并支持全方向滚动。
 ###UI效果
 [Image](http://7fvfii.com1.z0.glb.clouddn.com/screenshot.gif)    
-![screenshot](http://7fvfii.com1.z0.glb.clouddn.com/screenshot.gif)  
+![screenshot](https://raw.githubusercontent.com/misakuo/3dTagCloudAndroid/master/screenshot.gif)  
 
 ###使用
 ##### Eclipse  
