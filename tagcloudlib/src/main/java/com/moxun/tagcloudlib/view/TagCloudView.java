@@ -66,7 +66,7 @@ public class TagCloudView extends ViewGroup implements Runnable, TagsAdapter.OnD
     private boolean isOnTouch = false;
     private Handler handler = new Handler(Looper.getMainLooper());
 
-    private TagsAdapter tagsAdapter;
+    private TagsAdapter tagsAdapter = new NOPTagsAdapter();
     private OnTagClickListener onTagClickListener;
 
     public TagCloudView(Context context) {

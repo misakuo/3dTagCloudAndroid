@@ -1,7 +1,9 @@
 package com.moxun.tagcloud;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
@@ -45,6 +47,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 tagCloudView.setAdapter(vectorTagsAdapter);
+            }
+        });
+
+        findViewById(R.id.test_fragment).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, FragmentTestActivity.class));
             }
         });
     }
