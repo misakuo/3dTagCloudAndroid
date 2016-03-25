@@ -20,7 +20,7 @@ copy source code or using maven plugin for Eclipse.
 - Place code in your `build.gradle`  
 ```
 dependencies {
-    compile 'com.moxun:tagcloudlib:1.1.2'
+    compile 'com.moxun:tagcloudlib:1.1.3'
 }
 ```
 
