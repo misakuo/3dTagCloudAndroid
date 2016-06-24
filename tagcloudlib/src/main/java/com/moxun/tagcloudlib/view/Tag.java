@@ -2,6 +2,7 @@ package com.moxun.tagcloudlib.view;
 
 import android.graphics.Color;
 import android.util.Log;
+import android.view.View;
 
 /**
  * Copyright © 2016 moxun
@@ -33,6 +34,8 @@ public class Tag {
     private float scale;
     private float[] argb;
     private static final int DEFAULT_POPULARITY = 5;
+    private View childView;
+
 
     public Tag() {
         this(0f, 0f, 0f, 1.0f, 0);
@@ -94,6 +97,14 @@ public class Tag {
 
     public void setScale(float scale) {
         this.scale = scale;
+    }
+
+    public View getChildView() {
+        return childView;
+    }
+
+    public void setChildView(View view) {
+        this.childView = view;
     }
 
     public void setAlpha(float alpha) {
