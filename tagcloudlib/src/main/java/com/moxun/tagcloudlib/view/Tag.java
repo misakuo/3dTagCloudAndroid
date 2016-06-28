@@ -1,7 +1,6 @@
 package com.moxun.tagcloudlib.view;
 
 import android.graphics.Color;
-import android.util.Log;
 import android.view.View;
 
 /**
@@ -34,7 +33,7 @@ public class Tag {
     private float scale;
     private float[] argb;
     private static final int DEFAULT_POPULARITY = 5;
-    private View childView;
+    private View mView;
 
 
     public Tag() {
@@ -99,12 +98,12 @@ public class Tag {
         this.scale = scale;
     }
 
-    public View getChildView() {
-        return childView;
+    public View getView() {
+        return mView;
     }
 
-    public void setChildView(View view) {
-        this.childView = view;
+    public void setView(View view) {
+        this.mView = view;
     }
 
     public void setAlpha(float alpha) {
@@ -137,7 +136,7 @@ public class Tag {
 
     public void setColorByArray(float[] rgb) {
         if (rgb != null) {
-            System.arraycopy(rgb, 0, this.argb, this.argb.length - rgb.length , rgb.length);
+            System.arraycopy(rgb, 0, this.argb, this.argb.length - rgb.length, rgb.length);
         }
     }
 
@@ -146,8 +145,6 @@ public class Tag {
         for (int i = 0; i < 4; i++) {
             result[i] = (int) (this.argb[i] * 0xff);
         }
-        int color = Color.argb(result[0], result[1], result[2], result[3]);
-        //Log.e("TAG","#" + Integer.toHexString(color));
-        return color;
+        return Color.argb(result[0], result[1], result[2], result[3]);
     }
 }

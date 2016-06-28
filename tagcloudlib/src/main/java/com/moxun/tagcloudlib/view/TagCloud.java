@@ -22,8 +22,6 @@ package com.moxun.tagcloudlib.view;
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import android.util.Log;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -32,7 +30,6 @@ import java.util.List;
 public class TagCloud {
 
     private List<Tag> tagCloud;
-    private List<Tag> tagCloudSort;
     private int radius;
     private static final int DEFAULT_RADIUS = 3;
     private static final float[] DEFAULT_COLOR_DARK = {0.886f, 0.725f, 0.188f, 1f};
@@ -69,7 +66,6 @@ public class TagCloud {
         this.radius = radius;
         this.tagColorLight = tagColor1;
         this.tagColorDark = tagColor2;
-        this.tagCloudSort = new ArrayList<>();
     }
 
     //create method calculates the correct initial location of each tag
@@ -100,7 +96,6 @@ public class TagCloud {
 
     public void clear() {
         tagCloud.clear();
-        tagCloudSort.clear();
     }
 
     public List<Tag> getTagList() {
@@ -156,7 +151,6 @@ public class TagCloud {
         position(distrEven, newTag);
         //now add the new tag to the tagCloud
         tagCloud.add(newTag);
-        tagCloudSort.add(newTag);
         updateAll();
     }
 
@@ -231,6 +225,7 @@ public class TagCloud {
             tagCloud.get(j).setScale(per);
             tagCloud.get(j).setAlpha(per / 2);
         }
+        sortTagByScale();
     }
 
     private float[] getColorFromGradient(float percentage) {
@@ -273,18 +268,15 @@ public class TagCloud {
         this.mAngleY = mAngleY;
     }
 
-    public List<Tag> sortTagByScale(){
-        Collections.sort(tagCloudSort, new SortByScale());
-        return tagCloudSort;
+    public void sortTagByScale() {
+        Collections.sort(tagCloud, new TagComparator());
     }
 
-    private static class SortByScale implements Comparator {
-        public int compare(Object o1, Object o2) {
-            if(o1 instanceof Tag && o2 instanceof Tag){
-                return ((Tag) o1).getScale()>((Tag) o2).getScale()?1:-1;
-            }
-            return 0;
+    private static class TagComparator implements Comparator<Tag> {
+
+        @Override
+        public int compare(Tag o1, Tag o2) {
+            return o1.getScale() > o2.getScale() ? 1 : -1;
         }
     }
-
 }
