@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 
-version = "1.1.3"
+version = "1.2.0"
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.1"
@@ -21,6 +21,7 @@ android {
 }
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support:support-annotations:23.2.1'
 }
 def siteUrl = 'https://github.com/misakuo/3dTagCloudAndroid'      // 项目的主页
 def gitUrl = 'https://github.com/misakuo/3dTagCloudAndroid.git'   // Git仓库的url
