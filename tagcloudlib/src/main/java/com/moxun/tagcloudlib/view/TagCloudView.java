@@ -40,6 +40,8 @@ import android.view.WindowManager;
 
 import com.moxun.tagcloudlib.R;
 
+import java.util.List;
+
 public class TagCloudView extends ViewGroup implements Runnable, TagsAdapter.OnDataSetChangeListener {
     private final float TOUCH_SCALE_FACTOR = .8f;
     private final float TRACKBALL_SCALE_FACTOR = 10;
@@ -177,8 +179,10 @@ public class TagCloudView extends ViewGroup implements Runnable, TagsAdapter.OnD
                 mTagCloud.clear();
                 removeAllViews();
                 for (int i = 0; i < tagsAdapter.getCount(); i++) {
-                    TagCloudView.this.mTagCloud.add(new Tag(tagsAdapter.getPopularity(i)));
+                    Tag tag = new Tag(tagsAdapter.getPopularity(i));
                     View view = tagsAdapter.getView(getContext(), i, TagCloudView.this);
+                    tag.setChildView(view);
+                    TagCloudView.this.mTagCloud.add(tag);
                     addView(view);
                     addListener(view, i);
                 }
@@ -262,11 +266,12 @@ public class TagCloudView extends ViewGroup implements Runnable, TagsAdapter.OnD
         right = r;
         top = t;
         bottom = b;
-
-        for (int i = 0; i < getChildCount(); i++) {
-            View child = getChildAt(i);
-            if (child.getVisibility() != GONE) {
-                Tag tag = mTagCloud.get(i);
+        
+        List<Tag> tags = mTagCloud.sortTagByScale();
+        for (int i=0; i < tags.size(); i++) {
+            Tag tag = tags.get(i);
+            View child = tag.getChildView();
+            if (child != null && child.getVisibility() != GONE) {
                 tagsAdapter.onThemeColorChanged(child, tag.getColor());
                 child.setScaleX(tag.getScale());
                 child.setScaleY(tag.getScale());
@@ -275,6 +280,7 @@ public class TagCloudView extends ViewGroup implements Runnable, TagsAdapter.OnD
                 top = (int) (centerY + tag.getLoc2DY()) - child.getMeasuredHeight() / 2;
 
                 child.layout(left, top, left + child.getMeasuredWidth(), top + child.getMeasuredHeight());
+                child.bringToFront();
             }
         }
     }
