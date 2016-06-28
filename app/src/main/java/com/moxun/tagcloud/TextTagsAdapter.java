@@ -1,6 +1,7 @@
 package com.moxun.tagcloud;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.Gravity;
@@ -44,6 +45,7 @@ public class TextTagsAdapter extends TagsAdapter {
                 Toast.makeText(context, "Tag " + position + " clicked", Toast.LENGTH_SHORT).show();
             }
         });
+        tv.setTextColor(Color.WHITE);
         return tv;
     }
 
@@ -59,6 +61,6 @@ public class TextTagsAdapter extends TagsAdapter {
 
     @Override
     public void onThemeColorChanged(View view, int themeColor) {
-        ((TextView) view).setTextColor(themeColor);
+        view.setBackgroundColor(themeColor);
     }
 }

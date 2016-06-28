@@ -1,69 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
 
-    <LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/container"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    tools:context="com.moxun.tagcloud.MainActivity"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:orientation="horizontal">
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/tagLight" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/tagDark" />
+    </LinearLayout>
+
+    <com.moxun.tagcloudlib.view.TagCloudView
+        android:id="@+id/tag_cloud"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        app:autoScrollMode="uniform"
+        app:darkColor="@color/tagDark"
+        app:lightColor="@color/tagLight"
+        app:radiusPercent="0.6"
+        app:scrollSpeed="3" />
+
+    <Button
+        android:id="@+id/tag_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="vertical"
-        tools:context="com.moxun.tagcloud.MainActivity">
+        android:text="Simple Text Tag" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="20dp"
-            android:orientation="horizontal">
+    <Button
+        android:id="@+id/tag_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Custom View Tag" />
 
-            <View
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@color/tagLight" />
+    <Button
+        android:id="@+id/tag_vector"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="VectorDrawable Tag" />
 
-            <View
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@color/tagDark" />
-        </LinearLayout>
+    <Button
+        android:id="@+id/test_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Using in Fragment" />
 
-        <com.moxun.tagcloudlib.view.TagCloudView
-            android:id="@+id/tag_cloud"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            app:autoScrollMode="uniform"
-            app:darkColor="@color/tagDark"
-            app:lightColor="@color/tagLight"
-            app:radiusPercent="0.6"
-            app:scrollSpeed="3" />
-
-        <Button
-            android:id="@+id/tag_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Simple Text Tag" />
-
-        <Button
-            android:id="@+id/tag_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Custom View Tag" />
-
-        <Button
-            android:id="@+id/tag_vector"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="VectorDrawable Tag" />
-
-        <Button
-            android:id="@+id/test_fragment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Using in Fragment" />
-
-    </LinearLayout>
-</ScrollView>
+</LinearLayout>

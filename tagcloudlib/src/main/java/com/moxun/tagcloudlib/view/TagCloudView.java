@@ -2,17 +2,17 @@ package com.moxun.tagcloudlib.view;
 
 /**
  * Copyright © 2016 moxun
- * <p>
+ * <p/>
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the “Software”),
  * to deal in the Software without restriction, including without limitation the
  * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
  * sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * <p>
+ * <p/>
  * The above copyright notice and this permission notice shall be
  * included in all copies or substantial portions of the Software.
- * <p>
+ * <p/>
  * THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND,
  * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
@@ -22,7 +22,6 @@ package com.moxun.tagcloudlib.view;
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
@@ -30,6 +29,7 @@ import android.graphics.Point;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.IntDef;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -40,12 +40,13 @@ import android.view.WindowManager;
 
 import com.moxun.tagcloudlib.R;
 
-import java.util.List;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 public class TagCloudView extends ViewGroup implements Runnable, TagsAdapter.OnDataSetChangeListener {
-    private final float TOUCH_SCALE_FACTOR = .8f;
-    private final float TRACKBALL_SCALE_FACTOR = 10;
-    private float tspeed = 2f;
+    private static final float TOUCH_SCALE_FACTOR = .8f;
+    private static final float TRACKBALL_SCALE_FACTOR = 10;
+    private float speed = 2f;
     private TagCloud mTagCloud;
     private float mAngleX = 0.5f;
     private float mAngleY = 0.5f;
@@ -56,11 +57,15 @@ public class TagCloudView extends ViewGroup implements Runnable, TagsAdapter.OnD
     private float[] darkColor = new float[]{1f, 0f, 0f, 1f};//rgba
     private float[] lightColor = new float[]{0.9412f, 0.7686f, 0.2f, 1f};//rgba
 
+    @IntDef({MODE_DISABLE, MODE_DECELERATE, MODE_UNIFORM})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface Mode {
+    }
+
     public static final int MODE_DISABLE = 0;
     public static final int MODE_DECELERATE = 1;
     public static final int MODE_UNIFORM = 2;
     public int mode;
-    private int left, right, top, bottom;
 
     private MarginLayoutParams layoutParams;
     private int minSize;
@@ -123,8 +128,13 @@ public class TagCloudView extends ViewGroup implements Runnable, TagsAdapter.OnD
         minSize = screenHeight < screenWidth ? screenHeight : screenWidth;
     }
 
-    public void setAutoScrollMode(int mode) {
+    public void setAutoScrollMode(@Mode int mode) {
         this.mode = mode;
+    }
+
+    @Mode
+    public int getAutoScrollMode() {
+        return this.mode;
     }
 
     public final void setAdapter(TagsAdapter adapter) {
@@ -179,19 +189,19 @@ public class TagCloudView extends ViewGroup implements Runnable, TagsAdapter.OnD
                 mTagCloud.clear();
                 removeAllViews();
                 for (int i = 0; i < tagsAdapter.getCount(); i++) {
+                    //binding view to each tag
                     Tag tag = new Tag(tagsAdapter.getPopularity(i));
                     View view = tagsAdapter.getView(getContext(), i, TagCloudView.this);
-                    tag.setChildView(view);
-                    TagCloudView.this.mTagCloud.add(tag);
-                    addView(view);
+                    tag.setView(view);
+                    mTagCloud.add(tag);
                     addListener(view, i);
                 }
-
                 mTagCloud.create(true);
-
                 mTagCloud.setAngleX(mAngleX);
                 mTagCloud.setAngleY(mAngleY);
                 mTagCloud.update();
+
+                resetChildren();
             }
         }, 0);
     }
@@ -220,7 +230,15 @@ public class TagCloudView extends ViewGroup implements Runnable, TagsAdapter.OnD
     }
 
     public void setScrollSpeed(float scrollSpeed) {
-        tspeed = scrollSpeed;
+        speed = scrollSpeed;
+    }
+
+    private void resetChildren() {
+        removeAllViews();
+        //必须保证getChildAt(i) == mTagCloud.getTagList().get(i)
+        for (Tag tag : mTagCloud.getTagList()) {
+            addView(tag.getView());
+        }
     }
 
     @Override
@@ -255,22 +273,11 @@ public class TagCloudView extends ViewGroup implements Runnable, TagsAdapter.OnD
         handler.removeCallbacksAndMessages(null);
     }
 
-    @SuppressLint("WrongCall")
-    private void updateChild() {
-        onLayout(false, left, top, right, bottom);
-    }
-
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        left = l;
-        right = r;
-        top = t;
-        bottom = b;
-        
-        List<Tag> tags = mTagCloud.sortTagByScale();
-        for (int i=0; i < tags.size(); i++) {
-            Tag tag = tags.get(i);
-            View child = tag.getChildView();
+        for (int i = 0; i < getChildCount(); i++) {
+            View child = getChildAt(i);
+            Tag tag = mTagCloud.get(i);
             if (child != null && child.getVisibility() != GONE) {
                 tagsAdapter.onThemeColorChanged(child, tag.getColor());
                 child.setScaleX(tag.getScale());
@@ -280,14 +287,13 @@ public class TagCloudView extends ViewGroup implements Runnable, TagsAdapter.OnD
                 top = (int) (centerY + tag.getLoc2DY()) - child.getMeasuredHeight() / 2;
 
                 child.layout(left, top, left + child.getMeasuredWidth(), top + child.getMeasuredHeight());
-                child.bringToFront();
             }
         }
     }
 
     public void reset() {
         mTagCloud.reset();
-        updateChild();
+        resetChildren();
     }
 
     @Override
@@ -295,14 +301,14 @@ public class TagCloudView extends ViewGroup implements Runnable, TagsAdapter.OnD
         float x = e.getX();
         float y = e.getY();
 
-        mAngleX = (y) * tspeed * TRACKBALL_SCALE_FACTOR;
-        mAngleY = (-x) * tspeed * TRACKBALL_SCALE_FACTOR;
+        mAngleX = (y) * speed * TRACKBALL_SCALE_FACTOR;
+        mAngleY = (-x) * speed * TRACKBALL_SCALE_FACTOR;
 
         mTagCloud.setAngleX(mAngleX);
         mTagCloud.setAngleY(mAngleY);
         mTagCloud.update();
 
-        updateChild();
+        resetChildren();
         return true;
     }
 
@@ -331,8 +337,8 @@ public class TagCloudView extends ViewGroup implements Runnable, TagsAdapter.OnD
                 float dx = e.getX() - downX;
                 float dy = e.getY() - downY;
                 if (isValidMove(dx, dy)) {
-                    mAngleX = (dy / radius) * tspeed * TOUCH_SCALE_FACTOR;
-                    mAngleY = (-dx / radius) * tspeed * TOUCH_SCALE_FACTOR;
+                    mAngleX = (dy / radius) * speed * TOUCH_SCALE_FACTOR;
+                    mAngleY = (-dx / radius) * speed * TOUCH_SCALE_FACTOR;
                     processTouch();
                 }
                 break;
@@ -354,7 +360,7 @@ public class TagCloudView extends ViewGroup implements Runnable, TagsAdapter.OnD
             mTagCloud.setAngleY(mAngleY);
             mTagCloud.update();
         }
-        updateChild();
+        resetChildren();
     }
 
     @Override

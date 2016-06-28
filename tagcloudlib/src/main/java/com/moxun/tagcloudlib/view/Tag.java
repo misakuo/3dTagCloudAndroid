@@ -1,22 +1,21 @@
 package com.moxun.tagcloudlib.view;
 
 import android.graphics.Color;
-import android.util.Log;
 import android.view.View;
 
 /**
  * Copyright © 2016 moxun
- *
+ * <p/>
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the “Software”),
  * to deal in the Software without restriction, including without limitation the
  * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
  * sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- *
+ * <p/>
  * The above copyright notice and this permission notice shall be
  * included in all copies or substantial portions of the Software.
- *
+ * <p/>
  * THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND,
  * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
@@ -34,7 +33,7 @@ public class Tag {
     private float scale;
     private float[] argb;
     private static final int DEFAULT_POPULARITY = 5;
-    private View childView;
+    private View mView;
 
 
     public Tag() {
@@ -99,12 +98,12 @@ public class Tag {
         this.scale = scale;
     }
 
-    public View getChildView() {
-        return childView;
+    public View getView() {
+        return mView;
     }
 
-    public void setChildView(View view) {
-        this.childView = view;
+    public void setView(View view) {
+        this.mView = view;
     }
 
     public void setAlpha(float alpha) {
@@ -137,7 +136,7 @@ public class Tag {
 
     public void setColorByArray(float[] rgb) {
         if (rgb != null) {
-            System.arraycopy(rgb, 0, this.argb, this.argb.length - rgb.length , rgb.length);
+            System.arraycopy(rgb, 0, this.argb, this.argb.length - rgb.length, rgb.length);
         }
     }
 
@@ -146,8 +145,6 @@ public class Tag {
         for (int i = 0; i < 4; i++) {
             result[i] = (int) (this.argb[i] * 0xff);
         }
-        int color = Color.argb(result[0], result[1], result[2], result[3]);
-        //Log.e("TAG","#" + Integer.toHexString(color));
-        return color;
+        return Color.argb(result[0], result[1], result[2], result[3]);
     }
 }
