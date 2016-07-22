@@ -381,7 +381,7 @@ public class TagCloudView extends ViewGroup implements Runnable, TagsAdapter.OnD
                 if (mAngleX < -0.04f) {
                     mAngleX += 0.02f;
                 }
-                if (mAngleY < 0.04f) {
+                if (mAngleY < -0.04f) {
                     mAngleY += 0.02f;
                 }
             }
