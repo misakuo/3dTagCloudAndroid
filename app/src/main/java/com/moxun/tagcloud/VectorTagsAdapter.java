@@ -3,7 +3,6 @@ package com.moxun.tagcloud;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
-import android.graphics.drawable.VectorDrawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,6 +41,9 @@ public class VectorTagsAdapter extends TagsAdapter {
         ImageView imageView = (ImageView) view.findViewById(R.id.vector_img);
         PorterDuffColorFilter porterDuffColorFilter = new PorterDuffColorFilter(themeColor,
                 PorterDuff.Mode.SRC_ATOP);
+        if (imageView == null) {
+            return;
+        }
         imageView.getDrawable().setColorFilter(porterDuffColorFilter);
     }
 }
