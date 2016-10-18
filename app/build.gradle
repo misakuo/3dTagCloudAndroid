@@ -22,11 +22,11 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    //compile project(path: ':tagcloudlib')
+    compile project(path: ':tagcloudlib')
     compile 'com.android.support:appcompat-v7:23.2.1'
     compile 'com.android.support:design:23.2.1'
     compile 'com.android.support:support-vector-drawable:23.2.0'
     compile 'com.android.support:animated-vector-drawable:23.2.0'
     compile 'com.android.support:support-v4:23.2.1'
-    compile 'com.moxun:tagcloudlib:1.2.0'
+    //compile 'com.moxun:tagcloudlib:1.2.0'
 }
