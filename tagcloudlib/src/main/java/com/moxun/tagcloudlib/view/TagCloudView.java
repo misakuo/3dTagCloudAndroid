@@ -48,8 +48,8 @@ public class TagCloudView extends ViewGroup implements Runnable, TagsAdapter.OnD
     private static final float TRACKBALL_SCALE_FACTOR = 10;
     private float speed = 2f;
     private TagCloud mTagCloud;
-    private float mAngleX = 0.5f;
-    private float mAngleY = 0.5f;
+    private float mAngleX;
+    private float mAngleY;
     private float centerX, centerY;
     private float radius;
     private float radiusPercent = 0.9f;
@@ -102,6 +102,8 @@ public class TagCloudView extends ViewGroup implements Runnable, TagsAdapter.OnD
             mode = Integer.valueOf(m);
 
             setManualScroll(typedArray.getBoolean(R.styleable.TagCloudView_manualScroll, true));
+            mAngleX = typedArray.getFloat(R.styleable.TagCloudView_startAngleX, 0.5f);
+            mAngleY = typedArray.getFloat(R.styleable.TagCloudView_startAngleY, 0.5f);
 
             int light = typedArray.getColor(R.styleable.TagCloudView_lightColor, Color.WHITE);
             setLightColor(light);

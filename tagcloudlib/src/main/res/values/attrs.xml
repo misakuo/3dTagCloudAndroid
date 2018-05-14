@@ -12,6 +12,8 @@
         <attr name="scrollSpeed" format="float"/>
         <attr name="lightColor" format="color"/>
         <attr name="darkColor" format="color"/>
+        <attr name="startAngleX" format="float"/>
+        <attr name="startAngleY" format="float"/>
     </declare-styleable>
 
 </resources>
