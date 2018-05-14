@@ -37,7 +37,7 @@ public class VectorTagsAdapter extends TagsAdapter {
     }
 
     @Override
-    public void onThemeColorChanged(View view, int themeColor) {
+    public void onThemeColorChanged(View view, int themeColor, float alpha) {
         ImageView imageView = (ImageView) view.findViewById(R.id.vector_img);
         PorterDuffColorFilter porterDuffColorFilter = new PorterDuffColorFilter(themeColor,
                 PorterDuff.Mode.SRC_ATOP);

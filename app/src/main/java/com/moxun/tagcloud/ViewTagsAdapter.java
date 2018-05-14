@@ -33,7 +33,7 @@ public class ViewTagsAdapter extends TagsAdapter {
     }
 
     @Override
-    public void onThemeColorChanged(View view, int themeColor) {
+    public void onThemeColorChanged(View view, int themeColor, float alpha) {
         view.findViewById(R.id.android_eye).setBackgroundColor(themeColor);
     }
 }
