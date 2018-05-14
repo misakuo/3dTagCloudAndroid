@@ -66,6 +66,7 @@ public class TagCloudView extends ViewGroup implements Runnable, TagsAdapter.OnD
     public static final int MODE_DECELERATE = 1;
     public static final int MODE_UNIFORM = 2;
     public int mode;
+    private boolean manualScroll;
 
     private MarginLayoutParams layoutParams;
     private int minSize;
@@ -99,6 +100,8 @@ public class TagCloudView extends ViewGroup implements Runnable, TagsAdapter.OnD
 
             String m = typedArray.getString(R.styleable.TagCloudView_autoScrollMode);
             mode = Integer.valueOf(m);
+
+            setManualScroll(typedArray.getBoolean(R.styleable.TagCloudView_manualScroll, true));
 
             int light = typedArray.getColor(R.styleable.TagCloudView_lightColor, Color.WHITE);
             setLightColor(light);
@@ -141,6 +144,10 @@ public class TagCloudView extends ViewGroup implements Runnable, TagsAdapter.OnD
         tagsAdapter = adapter;
         tagsAdapter.setOnDataSetChangeListener(this);
         onChange();
+    }
+
+    public void setManualScroll(boolean manualScroll) {
+        this.manualScroll = manualScroll;
     }
 
     public void setLightColor(int color) {
@@ -298,29 +305,35 @@ public class TagCloudView extends ViewGroup implements Runnable, TagsAdapter.OnD
 
     @Override
     public boolean onTrackballEvent(MotionEvent e) {
-        float x = e.getX();
-        float y = e.getY();
+        if (manualScroll) {
+            float x = e.getX();
+            float y = e.getY();
 
-        mAngleX = (y) * speed * TRACKBALL_SCALE_FACTOR;
-        mAngleY = (-x) * speed * TRACKBALL_SCALE_FACTOR;
+            mAngleX = (y) * speed * TRACKBALL_SCALE_FACTOR;
+            mAngleY = (-x) * speed * TRACKBALL_SCALE_FACTOR;
 
-        mTagCloud.setAngleX(mAngleX);
-        mTagCloud.setAngleY(mAngleY);
-        mTagCloud.update();
+            mTagCloud.setAngleX(mAngleX);
+            mTagCloud.setAngleY(mAngleY);
+            mTagCloud.update();
 
-        resetChildren();
+            resetChildren();
+        }
         return true;
     }
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        handleTouchEvent(ev);
+        if (manualScroll) {
+            handleTouchEvent(ev);
+        }
         return false;
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent e) {
-        handleTouchEvent(e);
+        if (manualScroll) {
+            handleTouchEvent(e);
+        }
         return true;
     }
 
