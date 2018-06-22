@@ -33,7 +33,7 @@ public abstract class TagsAdapter {
     public abstract View getView(Context context, int position, ViewGroup parent);
     public abstract Object getItem(int position);
     public abstract int getPopularity(int position);
-    public abstract void onThemeColorChanged(View view,int themeColor);
+    public abstract void onThemeColorChanged(View view, int themeColor, float alpha);
 
     public final void notifyDataSetChanged() {
         onDataSetChangeListener.onChange();
