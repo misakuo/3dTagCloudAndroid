@@ -44,6 +44,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 public class TagCloudView extends ViewGroup implements Runnable, TagsAdapter.OnDataSetChangeListener {
+    private final String TAG = TagCloudView.class.getSimpleName();
     private static final float TOUCH_SCALE_FACTOR = .8f;
     private static final float TRACKBALL_SCALE_FACTOR = 10;
     private float speed = 2f;
@@ -56,6 +57,9 @@ public class TagCloudView extends ViewGroup implements Runnable, TagsAdapter.OnD
 
     private float[] darkColor = new float[]{1f, 0f, 0f, 1f};//rgba
     private float[] lightColor = new float[]{0.9412f, 0.7686f, 0.2f, 1f};//rgba
+    private boolean mStarted = true;
+    private float mLastAngleX;
+    private float mLastAngleY;
 
     @IntDef({MODE_DISABLE, MODE_DECELERATE, MODE_UNIFORM})
     @Retention(RetentionPolicy.SOURCE)
@@ -104,6 +108,8 @@ public class TagCloudView extends ViewGroup implements Runnable, TagsAdapter.OnD
             setManualScroll(typedArray.getBoolean(R.styleable.TagCloudView_manualScroll, true));
             mAngleX = typedArray.getFloat(R.styleable.TagCloudView_startAngleX, 0.5f);
             mAngleY = typedArray.getFloat(R.styleable.TagCloudView_startAngleY, 0.5f);
+            mLastAngleX = mAngleX;
+            mLastAngleY = mAngleY;
 
             int light = typedArray.getColor(R.styleable.TagCloudView_lightColor, Color.WHITE);
             setLightColor(light);
@@ -187,10 +193,11 @@ public class TagCloudView extends ViewGroup implements Runnable, TagsAdapter.OnD
         this.postDelayed(new Runnable() {
             @Override
             public void run() {
-                centerX = (getRight() - getLeft()) / 2;
-                centerY = (getBottom() - getTop()) / 2;
+                centerX = (getRight() - getLeft() - getPaddingLeft() - getPaddingRight()) / 2;
+                centerY = (getBottom() - getTop() - getPaddingTop() - getPaddingBottom()) / 2;
                 radius = Math.min(centerX * radiusPercent, centerY * radiusPercent);
                 mTagCloud.setRadius((int) radius);
+                mTagCloud.setRatio(centerX * 1.0f / centerY);
 
                 mTagCloud.setTagColorLight(lightColor);//higher color
                 mTagCloud.setTagColorDark(darkColor);//lower color
@@ -265,6 +272,8 @@ public class TagCloudView extends ViewGroup implements Runnable, TagsAdapter.OnD
 
         int dimensionX = widthMode == MeasureSpec.EXACTLY ? contentWidth : minSize - layoutParams.leftMargin - layoutParams.rightMargin;
         int dimensionY = heightMode == MeasureSpec.EXACTLY ? contentHeight : minSize - layoutParams.leftMargin - layoutParams.rightMargin;
+//        int dimensionX = widthMode == MeasureSpec.EXACTLY ? contentWidth : minSize - layoutParams.leftMargin - layoutParams.rightMargin-getPaddingLeft()-getPaddingRight();
+//        int dimensionY = heightMode == MeasureSpec.EXACTLY ? contentHeight : minSize - layoutParams.leftMargin - layoutParams.rightMargin-getPaddingTop()-getPaddingBottom();
         setMeasuredDimension(dimensionX, dimensionY);
 
         measureChildren(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
@@ -349,24 +358,38 @@ public class TagCloudView extends ViewGroup implements Runnable, TagsAdapter.OnD
                 isOnTouch = true;
             case MotionEvent.ACTION_MOVE:
                 //rotate elements depending on how far the selection point is from center of cloud
+
                 float dx = e.getX() - downX;
                 float dy = e.getY() - downY;
                 if (isValidMove(dx, dy)) {
-                    mAngleX = (dy / radius) * speed * TOUCH_SCALE_FACTOR;
-                    mAngleY = (-dx / radius) * speed * TOUCH_SCALE_FACTOR;
+                    float max = Math.max(Math.abs(dx), Math.abs(dy)) / 8;
+                    mAngleX = (dy / radius) * TOUCH_SCALE_FACTOR;
+                    mAngleY = (-dx / radius) * TOUCH_SCALE_FACTOR;
+
                     processTouch();
                 }
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
                 isOnTouch = false;
+                float dx2 = e.getX() - downX;
+                float dy2 = e.getY() - downY;
+                if (isValidMove(dx2, dy2)) {
+                    float max = Math.max(Math.abs(dx2), Math.abs(dy2));
+                    mLastAngleX = (dy2 / max) * speed * TOUCH_SCALE_FACTOR;
+                    mLastAngleY = (-dx2 / max) * speed * TOUCH_SCALE_FACTOR;
+
+                }
+
                 break;
         }
+
+        Log.e(TAG, "angleX:" + mAngleX + "  angleY:" + mAngleY);
     }
 
     private boolean isValidMove(float dx, float dy) {
         int minDistance = ViewConfiguration.get(getContext()).getScaledTouchSlop();
-        return (Math.abs(dx) > minDistance || Math.abs(dy) > minDistance);
+        return (Math.abs(dx) > speed * minDistance || Math.abs(dy) > speed * minDistance);
     }
 
     private void processTouch() {
@@ -385,7 +408,8 @@ public class TagCloudView extends ViewGroup implements Runnable, TagsAdapter.OnD
 
     @Override
     public void run() {
-        if (!isOnTouch && mode != MODE_DISABLE) {
+
+        if (mStarted && !isOnTouch && mode != MODE_DISABLE) {
             if (mode == MODE_DECELERATE) {
                 if (mAngleX > 0.04f) {
                     mAngleX -= 0.02f;
@@ -400,6 +424,23 @@ public class TagCloudView extends ViewGroup implements Runnable, TagsAdapter.OnD
                     mAngleY += 0.02f;
                 }
             }
+
+
+            if (mode == MODE_UNIFORM) {
+
+
+                if (Math.abs(mLastAngleX - mAngleX) > Math.abs(mAngleX) / 10) {
+                    mAngleX += (mLastAngleX - mAngleX) / 20;
+                }
+
+
+                if (Math.abs(mLastAngleY - mAngleY) > Math.abs(mAngleY) / 10) {
+                    mAngleY += (mLastAngleY - mAngleY) / 20;
+                }
+
+
+            }
+
             processTouch();
         }
 
@@ -413,4 +454,13 @@ public class TagCloudView extends ViewGroup implements Runnable, TagsAdapter.OnD
     public interface OnTagClickListener {
         void onItemClick(ViewGroup parent, View view, int position);
     }
+
+    public void start() {
+        mStarted = true;
+    }
+
+    public void stop() {
+        mStarted = false;
+    }
+
 }

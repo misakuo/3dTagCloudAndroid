@@ -30,14 +30,14 @@
 
     <com.moxun.tagcloudlib.view.TagCloudView
         android:id="@+id/tag_cloud"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="#f55a00"
         app:autoScrollMode="uniform"
         app:darkColor="@color/tagDark"
         app:lightColor="@color/tagLight"
         app:radiusPercent="0.6"
-        app:scrollSpeed="3" />
+        app:scrollSpeed="0.5" />
 
     <Button
         android:id="@+id/tag_text"
