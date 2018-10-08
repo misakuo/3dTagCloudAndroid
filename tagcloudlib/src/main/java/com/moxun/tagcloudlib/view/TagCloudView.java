@@ -37,6 +37,8 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 
 import com.moxun.tagcloudlib.R;
 
@@ -57,9 +59,10 @@ public class TagCloudView extends ViewGroup implements Runnable, TagsAdapter.OnD
 
     private float[] darkColor = new float[]{1f, 0f, 0f, 1f};//rgba
     private float[] lightColor = new float[]{0.9412f, 0.7686f, 0.2f, 1f};//rgba
-    private boolean mStarted = true;
+    private boolean mStarted = false;
     private float mLastAngleX;
     private float mLastAngleY;
+    private Point mCenterPoint;
 
     @IntDef({MODE_DISABLE, MODE_DECELERATE, MODE_UNIFORM})
     @Retention(RetentionPolicy.SOURCE)
@@ -461,6 +464,73 @@ public class TagCloudView extends ViewGroup implements Runnable, TagsAdapter.OnD
 
     public void stop() {
         mStarted = false;
+    }
+
+    public void startWithAnimation() {
+
+
+        for (int i = 0; i < getChildCount(); i++) {
+
+
+            final View view = getChildAt(i);
+            Tag tag = mTagCloud.get(i);
+            view.setVisibility(INVISIBLE);
+            int left, top;
+            left = (int) (centerX + tag.getLoc2DX()) - view.getMeasuredWidth() / 2;
+            top = (int) (centerY + tag.getLoc2DY()) - view.getMeasuredHeight() / 2;
+            TranslateAnimation translateAnimation = new TranslateAnimation(centerX-left, 0,centerY-top, 0);
+            translateAnimation.setDuration(1000L);
+
+
+            translateAnimation.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+
+                    view.setVisibility(VISIBLE);
+                    view.clearAnimation();
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
+
+            view.setAnimation(translateAnimation);
+
+
+            translateAnimation.startNow();
+
+
+        }
+
+
+        this.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+                mStarted = true;
+            }
+        }, 1000L);
+
+    }
+
+
+    private Point getCenterPoint() {
+        if (mCenterPoint == null) {
+
+            mCenterPoint = new Point();
+            mCenterPoint.x = (getRight() - getLeft()) / 2;
+            mCenterPoint.y = (getBottom() - getTop()) / 2;
+        }
+
+        return mCenterPoint;
+
     }
 
 }

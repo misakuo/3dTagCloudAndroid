@@ -76,6 +76,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+
+
+
         findViewById(R.id.tag_text).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -128,5 +132,17 @@ public class MainActivity extends AppCompatActivity {
         view.startAnimation(animationSet);
 
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        tagCloudView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                tagCloudView.startWithAnimation();
+
+            }
+        },0);
     }
 }
