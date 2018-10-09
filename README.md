@@ -1,12 +1,12 @@
 # TagCloudView    
 
-###简介
+### 简介
 TagCloudView是一个完全基于Android ViewGroup编写的控件，支持将一组View展示为一个3D球形集合，并支持全方向滚动,自适应不同高度，并实现开始时扩散动画以及手势释放后速度衰减及点击tag放大效果，参考[DBSphereTagCloud](https://github.com/dongxinb/DBSphereTagCloud)效果。
-###UI效果
-[Image](https://github.com/guojilong/3dTagCloudAndroid/blob/master/demo.gif)    
+### UI效果
+![Image](https://github.com/guojilong/3dTagCloudAndroid/blob/master/demo.gif)    
  
 
-###使用
+### 使用
 
 ##### Android Studio / IDEA
 - 在`build.gradle`中添加  
