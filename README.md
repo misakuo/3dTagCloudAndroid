@@ -1,25 +1,17 @@
 # TagCloudView    
-[![Download](https://api.bintray.com/packages/misakuo/maven/tagcloudview/images/download.svg) ](https://bintray.com/misakuo/maven/tagcloudview/_latestVersion)
-[![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-TagCloudAndroid-brightgreen.svg?style=flat)](http://www.android-arsenal.com/details/1/3060)
-[![Build Status](https://travis-ci.org/misakuo/3dTagCloudAndroid.svg?branch=master)](https://travis-ci.org/misakuo/3dTagCloudAndroid)
-[![Android Gems](http://www.android-gems.com/badge/misakuo/3dTagCloudAndroid.svg)](http://www.android-gems.com/lib/misakuo/3dTagCloudAndroid)    
-[English](https://github.com/misakuo/3dTagCloudAndroid/blob/master/README.en.md)
-###Sample
-![Sample APP](http://7fvfii.com1.z0.glb.clouddn.com/sample_qrcode.png)    
-扫码下载示例APK
+
 ###简介
-TagCloudView是一个完全基于Android ViewGroup编写的控件，支持将一组View展示为一个3D球形集合，并支持全方向滚动。
+TagCloudView是一个完全基于Android ViewGroup编写的控件，支持将一组View展示为一个3D球形集合，并支持全方向滚动,自适应不同高度，并实现开始时扩散动画以及手势释放后速度衰减及点击tag放大效果，参考[DBSphereTagCloud](https://github.com/dongxinb/DBSphereTagCloud)效果。
 ###UI效果
-[Image](http://7fvfii.com1.z0.glb.clouddn.com/screenshot.gif)    
-![screenshot](https://raw.githubusercontent.com/misakuo/3dTagCloudAndroid/master/screenshot.gif)  
+[Image](https://github.com/guojilong/3dTagCloudAndroid/blob/master/demo.gif)    
+ 
 
 ###使用
-##### Eclipse  
-copy代码，或使用ADT的maven插件
+
 ##### Android Studio / IDEA
 - 在`build.gradle`中添加  
 ```
-compile 'com.moxun:tagcloudlib:1.2.0'
+ implementation 'com.github.guojilong:3dTagCloudAndroid:1.4.0'
 ```
 
 - 在布局文件中引入  
@@ -40,6 +32,13 @@ compile 'com.moxun:tagcloudlib:1.2.0'
 *针对每个Tag返回一个权重值，该值与ThemeColor和Tag初始大小有关；一个简单的权重值生成方式是对一个数N取余或使用随机数*  
 **public void onThemeColorChanged(View view,int themeColor);**  
 *Tag主题色发生变化时会回调该方法*  
+
+- 开始滚动
+
+    **public void start()**  
+*开始*  
+**public void startWithAnimation()**  
+*带有展开动画的开始*
  
 - 定制属性    
 
@@ -54,3 +53,5 @@ compile 'com.moxun:tagcloudlib:1.2.0'
 
 ***
 欢迎提交PR
+
+感谢[misakuo](https://github.com/misakuo/3dTagCloudAndroid)
