@@ -22,12 +22,16 @@ package com.moxun.tagcloudlib.view;
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
 public class TagCloud {
+
+    private final String TAG=TagCloud.class.getSimpleName();
 
     private List<Tag> tagCloud;
     private int radius;
@@ -43,6 +47,7 @@ public class TagCloud {
     //private int size = 0;
     private int smallest, largest; //used to find spectrum for tag colors
     private boolean distrEven = true; //default is to distribute tags evenly on the Cloud
+    private float mRatio=1.0f;
 
     public TagCloud() {
         this(DEFAULT_RADIUS);
@@ -177,7 +182,9 @@ public class TagCloud {
         for (int i = 1; i < max + 1; i++) {
             if (distrEven) {
                 phi = Math.acos(-1.0 + (2.0 * i - 1.0) / max);
+                //以 -1 到 1 的一个数为参数，返回一个 0 到 pi （弧度）的数值
                 theta = Math.sqrt(max * Math.PI) * phi;
+                //
             } else {
                 phi = Math.random() * (Math.PI);
                 theta = Math.random() * (2 * Math.PI);
@@ -221,9 +228,9 @@ public class TagCloud {
 
             // add perspective
             int diameter = 2 * radius;
-            float per = diameter / 1.0f / (diameter + rz3);
+            float per = diameter / 1.0f / (diameter + rz3)*0.9f;
             // let's set position, scale, alpha for the tag;
-            tagCloud.get(j).setLoc2DX((int) (rx3 * per));
+            tagCloud.get(j).setLoc2DX((int) (mRatio*rx3 * per));
             tagCloud.get(j).setLoc2DY((int) (ry3 * per));
             tagCloud.get(j).setScale(per);
 
@@ -279,6 +286,12 @@ public class TagCloud {
 
     public void sortTagByScale() {
         Collections.sort(tagCloud, new TagComparator());
+    }
+
+    public void setRatio(float ratio) {
+
+        mRatio=ratio;
+
     }
 
     private static class TagComparator implements Comparator<Tag> {
