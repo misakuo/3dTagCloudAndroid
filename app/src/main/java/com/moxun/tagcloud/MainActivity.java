@@ -75,9 +75,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
-
-
+        tagCloudView.startWithAnimation();
 
 
         findViewById(R.id.tag_text).setOnClickListener(new View.OnClickListener() {
@@ -127,7 +125,6 @@ public class MainActivity extends AppCompatActivity {
         Log.e(TAG, "originScaleX:" + originScaleX + "  originScaleY:" + originScaleY);
 
 
-
         animationSet.setAnimationListener(animationListener);
         view.startAnimation(animationSet);
 
@@ -137,12 +134,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        tagCloudView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                tagCloudView.startWithAnimation();
 
-            }
-        },0);
+
     }
 }

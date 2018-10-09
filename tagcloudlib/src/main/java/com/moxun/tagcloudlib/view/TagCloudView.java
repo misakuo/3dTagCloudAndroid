@@ -468,6 +468,18 @@ public class TagCloudView extends ViewGroup implements Runnable, TagsAdapter.OnD
 
     public void startWithAnimation() {
 
+        this.post(new Runnable() {
+            @Override
+            public void run() {
+
+                addTranslateAnimation();
+            }
+        });
+
+
+    }
+
+    private void addTranslateAnimation() {
 
         for (int i = 0; i < getChildCount(); i++) {
 
@@ -478,8 +490,9 @@ public class TagCloudView extends ViewGroup implements Runnable, TagsAdapter.OnD
             int left, top;
             left = (int) (centerX + tag.getLoc2DX()) - view.getMeasuredWidth() / 2;
             top = (int) (centerY + tag.getLoc2DY()) - view.getMeasuredHeight() / 2;
-            TranslateAnimation translateAnimation = new TranslateAnimation(centerX-left, 0,centerY-top, 0);
+            TranslateAnimation translateAnimation = new TranslateAnimation(centerX - left, 0, centerY - top, 0);
             translateAnimation.setDuration(1000L);
+
 
 
             translateAnimation.setAnimationListener(new Animation.AnimationListener() {
@@ -518,19 +531,8 @@ public class TagCloudView extends ViewGroup implements Runnable, TagsAdapter.OnD
             }
         }, 1000L);
 
-    }
-
-
-    private Point getCenterPoint() {
-        if (mCenterPoint == null) {
-
-            mCenterPoint = new Point();
-            mCenterPoint.x = (getRight() - getLeft()) / 2;
-            mCenterPoint.y = (getBottom() - getTop()) / 2;
-        }
-
-        return mCenterPoint;
 
     }
+
 
 }
