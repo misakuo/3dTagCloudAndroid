@@ -64,6 +64,7 @@ public class TagCloudView extends ViewGroup implements Runnable, TagsAdapter.OnD
     public static final int MODE_DISABLE = 0;
     public static final int MODE_DECELERATE = 1;
     public static final int MODE_UNIFORM = 2;
+    private boolean manualScroll;
     public int mMode;
 
     private MarginLayoutParams mLayoutParams;
@@ -98,6 +99,10 @@ public class TagCloudView extends ViewGroup implements Runnable, TagsAdapter.OnD
 
             String m = typedArray.getString(R.styleable.TagCloudView_autoScrollMode);
             mMode = Integer.valueOf(m);
+
+            setManualScroll(typedArray.getBoolean(R.styleable.TagCloudView_manualScroll, true));
+            mInertiaX = typedArray.getFloat(R.styleable.TagCloudView_startAngleX, 0.5f);
+            mInertiaY = typedArray.getFloat(R.styleable.TagCloudView_startAngleY, 0.5f);
 
             int light = typedArray.getColor(R.styleable.TagCloudView_lightColor, Color.WHITE);
             setLightColor(light);
@@ -140,6 +145,10 @@ public class TagCloudView extends ViewGroup implements Runnable, TagsAdapter.OnD
         mAdapter = adapter;
         mAdapter.setOnDataSetChangeListener(this);
         onChange();
+    }
+
+    public void setManualScroll(boolean manualScroll) {
+        this.manualScroll = manualScroll;
     }
 
     public void setLightColor(int color) {
@@ -279,7 +288,7 @@ public class TagCloudView extends ViewGroup implements Runnable, TagsAdapter.OnD
             View child = getChildAt(i);
             Tag tag = mTagCloud.get(i);
             if (child != null && child.getVisibility() != GONE) {
-                mAdapter.onThemeColorChanged(child, tag.getColor());
+                mAdapter.onThemeColorChanged(child, tag.getColor(), tag.getAlpha());
                 child.setScaleX(tag.getScale());
                 child.setScaleY(tag.getScale());
                 int left, top;
@@ -298,13 +307,17 @@ public class TagCloudView extends ViewGroup implements Runnable, TagsAdapter.OnD
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        handleTouchEvent(ev);
+        if (manualScroll) {
+            handleTouchEvent(ev);
+        }
         return false;
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent e) {
-        handleTouchEvent(e);
+        if (manualScroll) {
+            handleTouchEvent(e);
+        }
         return true;
     }
 
@@ -364,7 +377,7 @@ public class TagCloudView extends ViewGroup implements Runnable, TagsAdapter.OnD
                 if (mInertiaX < -0.04f) {
                     mInertiaX += 0.02f;
                 }
-                if (mInertiaY < 0.04f) {
+                if (mInertiaY < -0.04f) {
                     mInertiaY += 0.02f;
                 }
             }

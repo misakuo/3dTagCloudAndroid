@@ -60,7 +60,7 @@ public class TextTagsAdapter extends TagsAdapter {
     }
 
     @Override
-    public void onThemeColorChanged(View view, int themeColor) {
+    public void onThemeColorChanged(View view, int themeColor, float alpha) {
         view.setBackgroundColor(themeColor);
     }
 }

@@ -20,7 +20,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         tagCloudView = (TagCloudView) findViewById(R.id.tag_cloud);
-        tagCloudView.setBackgroundColor(Color.LTGRAY);
 
         textTagsAdapter = new TextTagsAdapter(new String[20]);
         viewTagsAdapter = new ViewTagsAdapter();

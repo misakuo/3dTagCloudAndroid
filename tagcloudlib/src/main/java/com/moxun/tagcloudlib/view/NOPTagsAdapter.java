@@ -30,7 +30,7 @@ import android.view.ViewGroup;
     }
 
     @Override
-    public void onThemeColorChanged(View view, int themeColor) {
+    public void onThemeColorChanged(View view, int themeColor, float alpha) {
 
     }
 }

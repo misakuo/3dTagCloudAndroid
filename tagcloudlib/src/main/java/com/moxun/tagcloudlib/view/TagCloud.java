@@ -148,6 +148,8 @@ public class TagCloud {
         }
     }
 
+    private float maxDelta, minDelta;
+
     private void updateAll() {
 
         //update transparency/scale for all tags:
@@ -182,7 +184,13 @@ public class TagCloud {
             tag.setFlatX((int) (rx3 * per));
             tag.setFlatY((int) (ry3 * per));
             tag.setScale(per);
-            tag.setAlpha(per / 2);
+
+            // calculate alpha value
+            float delta = diameter + rz3;
+            maxDelta = Math.max(maxDelta, delta);
+            minDelta = Math.min(minDelta, delta);
+            float alpha = (delta - minDelta) / (maxDelta - minDelta);
+            tag.setAlpha(1 - alpha);
         }
         sortTagByScale();
     }

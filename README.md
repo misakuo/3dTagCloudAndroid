@@ -4,16 +4,19 @@
 [![Build Status](https://travis-ci.org/misakuo/3dTagCloudAndroid.svg?branch=master)](https://travis-ci.org/misakuo/3dTagCloudAndroid)
 [![Android Gems](http://www.android-gems.com/badge/misakuo/3dTagCloudAndroid.svg)](http://www.android-gems.com/lib/misakuo/3dTagCloudAndroid)    
 [English](https://github.com/misakuo/3dTagCloudAndroid/blob/master/README.en.md)
-###Sample
+
+### Sample
 ![Sample APP](http://7fvfii.com1.z0.glb.clouddn.com/sample_qrcode.png)    
 扫码下载示例APK
-###简介
-TagCloudView是一个完全基于Android ViewGroup编写的控件，支持将一组View展示为一个3D球形集合，并支持全方向滚动。
-###UI效果
+
+### 简介
+TagCloudView是一个基于ViewGroup实现的控件，支持将一组View展示为一个3D球形集合，并支持全方向滚动。
+
+### UI效果
 [Image](http://7fvfii.com1.z0.glb.clouddn.com/screenshot.gif)    
 ![screenshot](https://raw.githubusercontent.com/misakuo/3dTagCloudAndroid/master/screenshot.gif)  
 
-###使用
+### 使用
 ##### Eclipse  
 copy代码，或使用ADT的maven插件
 ##### Android Studio / IDEA

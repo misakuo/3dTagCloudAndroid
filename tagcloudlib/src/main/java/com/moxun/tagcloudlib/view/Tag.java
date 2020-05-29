@@ -137,6 +137,10 @@ public class Tag implements Comparable<Tag>{
         }
     }
 
+    public float getAlpha() {
+        return mColor[0];
+    }
+
     public int getColor() {
         int[] result = new int[4];
         for (int i = 0; i < 4; i++) {
