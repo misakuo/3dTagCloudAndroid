@@ -2,17 +2,17 @@ package com.moxun.tagcloudlib.view;
 
 /**
  * Copyright © 2016 moxun
- * <p>
+ *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the “Software”),
  * to deal in the Software without restriction, including without limitation the
  * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
  * sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * <p>
+ *
  * The above copyright notice and this permission notice shall be
  * included in all copies or substantial portions of the Software.
- * <p>
+ *
  * THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND,
  * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
@@ -24,25 +24,24 @@ package com.moxun.tagcloudlib.view;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class TagCloud {
 
-    private List<Tag> tagCloud;
-    private int radius;
+    private List<Tag> mTagList;
+    private int mRadius;
     private static final int DEFAULT_RADIUS = 3;
     private static final float[] DEFAULT_COLOR_DARK = {0.886f, 0.725f, 0.188f, 1f};
     private static final float[] DEFAULT_COLOR_LIGHT = {0.3f, 0.3f, 0.3f, 1f};
-    private float[] tagColorLight;  //text color 1(rgb Alpha)
-    private float[] tagColorDark; //text color 2 (rgb Alpha)
-    private float sin_mAngleX, cos_mAngleX, sin_mAngleY, cos_mAngleY, sin_mAngleZ, cos_mAngleZ;
-    private float mAngleZ = 0;
-    private float mAngleX = 0;
-    private float mAngleY = 0;
-    //private int size = 0;
-    private int smallest, largest; //used to find spectrum for tag colors
-    private boolean distrEven = true; //default is to distribute tags evenly on the Cloud
+    private float[] mLightColor;
+    private float[] mDarkColor;
+    private float mSinX, mCosX, mSinY, mCosY, mSinZ, mCosZ;
+    private float mInertiaZ = 0;
+    private float mInertiaX = 0;
+    private float mInertiaY = 0;
+
+    private int mMinPopularity, mMaxPopularity;
+    private boolean mRebuildOnUpdate = true;
 
     public TagCloud() {
         this(DEFAULT_RADIUS);
@@ -56,78 +55,44 @@ public class TagCloud {
         this(tags, DEFAULT_RADIUS);
     }
 
-    //Constructor just copies the existing tags in its List
     public TagCloud(List<Tag> tags, int radius) {
         this(tags, radius, DEFAULT_COLOR_DARK, DEFAULT_COLOR_LIGHT);
     }
 
     public TagCloud(List<Tag> tags, int radius, float[] tagColor1, float[] tagColor2) {
-        this.tagCloud = tags;    //Java does the initialization and deep copying
-        this.radius = radius;
-        this.tagColorLight = tagColor1;
-        this.tagColorDark = tagColor2;
+        this.mTagList = tags;
+        this.mRadius = radius;
+        this.mLightColor = tagColor1;
+        this.mDarkColor = tagColor2;
     }
 
-    //create method calculates the correct initial location of each tag
-    public void create(boolean distrEven) {
-        this.distrEven = distrEven;
-        //calculate and set the location of each Tag
-        positionAll(distrEven);
-        sineCosine(mAngleX, mAngleY, mAngleZ);
+    public void create(boolean rebuild) {
+        this.mRebuildOnUpdate = rebuild;
+        positionAll(mRebuildOnUpdate);
+        calculatePopularity();
+        recalculateAngle();
         updateAll();
-        //Now, let's calculate and set the color for each tag:
-        //first loop through all tags to find the smallest and largest populariteies
-        //largest popularity gets tcolor2, smallest gets tcolor1, the rest in between
-        smallest = 9999;
-        largest = 0;
-        for (int i = 0; i < tagCloud.size(); i++) {
-            int j = tagCloud.get(i).getPopularity();
-            largest = Math.max(largest, j);
-            smallest = Math.min(smallest, j);
-        }
-        //figuring out and assigning the colors/ textsize
-        Tag tempTag;
-        for (int i = 0; i < tagCloud.size(); i++) {
-            tempTag = tagCloud.get(i);
-
-            initTag(tempTag);
-        }
     }
 
     public void clear() {
-        tagCloud.clear();
+        mTagList.clear();
     }
 
     public List<Tag> getTagList() {
-        return tagCloud;
-    }
-
-    public void setTagList(List<Tag> list) {
-        tagCloud = list;
+        return mTagList;
     }
 
     public Tag get(int position) {
-        return tagCloud.get(position);
-    }
-
-    public Tag getTop() {
-        int i = tagCloud.size() - 1;
-        return get(i);
-    }
-
-    public int indexOf(Tag tag) {
-        return tagCloud.indexOf(tag);
+        return mTagList.get(position);
     }
 
     public void reset() {
-        create(distrEven);
+        create(mRebuildOnUpdate);
     }
 
-    //updates the transparency/scale of all elements
     public void update() {
-        // if mAngleX and mAngleY under threshold, skip motion calculations for performance
-        if (Math.abs(mAngleX) > .1 || Math.abs(mAngleY) > .1) {
-            sineCosine(mAngleX, mAngleY, mAngleZ);
+        if (Math.abs(mInertiaX) > 0.1f || Math.abs(mInertiaY) > 0.1f) {
+            recalculateAngle();
             updateAll();
         }
     }
@@ -135,47 +100,39 @@ public class TagCloud {
     private void initTag(Tag tag) {
         float percentage = getPercentage(tag);
         float[] argb = getColorFromGradient(percentage);
-        tag.setColorByArray(argb);
+        tag.setColorComponent(argb);
     }
 
     private float getPercentage(Tag tag) {
         int p = tag.getPopularity();
-        return (smallest == largest) ? 1.0f : ((float) p - smallest) / ((float) largest - smallest);
+        return (mMinPopularity == mMaxPopularity) ? 1.0f : ((float) p - mMinPopularity) / ((float) mMaxPopularity
+            - mMinPopularity);
     }
 
-    //if a single tag needed to be added
     public void add(Tag newTag) {
-
         initTag(newTag);
 
-        position(distrEven, newTag);
-        //now add the new tag to the tagCloud
-        tagCloud.add(newTag);
+        position(newTag);
+        mTagList.add(newTag);
         updateAll();
     }
 
-    private void position(boolean distrEven, Tag newTag) {
-        double phi = 0;
-        double theta = 0;
-        int max = tagCloud.size();
-        //when adding a new tag, just place it at some random location
-        //this is in fact why adding too many elements make TagCloud ugly
-        //after many add, do one reset to rearrange all tags
-        phi = Math.random() * (Math.PI);
-        theta = Math.random() * (2 * Math.PI);
-        //coordinate conversion:
-        newTag.setLocX((int) (radius * Math.cos(theta) * Math.sin(phi)));
-        newTag.setLocY((int) (radius * Math.sin(theta) * Math.sin(phi)));
-        newTag.setLocZ((int) (radius * Math.cos(phi)));
+    private void position(Tag newTag) {
+        double phi = Math.random() * (Math.PI);
+        double theta = Math.random() * (2 * Math.PI);
+
+        newTag.setSpatialX((int) (mRadius * Math.cos(theta) * Math.sin(phi)));
+        newTag.setSpatialY((int) (mRadius * Math.sin(theta) * Math.sin(phi)));
+        newTag.setSpatialZ((int) (mRadius * Math.cos(phi)));
     }
 
-    private void positionAll(boolean distrEven) {
+    private void positionAll(boolean rebuild) {
         double phi = 0;
         double theta = 0;
-        int max = tagCloud.size();
+        int max = mTagList.size();
         //distribute: (disrtEven is used to specify whether distribute random or even
         for (int i = 1; i < max + 1; i++) {
-            if (distrEven) {
+            if (rebuild) {
                 phi = Math.acos(-1.0 + (2.0 * i - 1.0) / max);
                 theta = Math.sqrt(max * Math.PI) * phi;
             } else {
@@ -184,108 +141,110 @@ public class TagCloud {
             }
 
             //coordinate conversion:
-            tagCloud.get(i - 1).setLocX((int) ((radius * Math.cos(theta) * Math.sin(phi))
+            mTagList.get(i - 1).setSpatialX((int) ((mRadius * Math.cos(theta) * Math.sin(phi))
             ));
-            tagCloud.get(i - 1).setLocY((int) (radius * Math.sin(theta) * Math.sin(phi)));
-            tagCloud.get(i - 1).setLocZ((int) (radius * Math.cos(phi)));
+            mTagList.get(i - 1).setSpatialY((int) (mRadius * Math.sin(theta) * Math.sin(phi)));
+            mTagList.get(i - 1).setSpatialZ((int) (mRadius * Math.cos(phi)));
         }
     }
 
-    float maxDelta = Float.MIN_VALUE;
-    float minDelta = Float.MAX_VALUE;
+    private float maxDelta, minDelta;
 
     private void updateAll() {
 
         //update transparency/scale for all tags:
-        int max = tagCloud.size();
-        for (int j = 0; j < max; j++) {
+        for (int j = 0; j < mTagList.size(); j++) {
+            Tag tag = mTagList.get(j);
+            float x = tag.getSpatialX();
+            float y = tag.getSpatialY();
+            float z = tag.getSpatialZ();
+
             //There exists two options for this part:
             // multiply positions by a x-rotation matrix
-            float rx1 = (tagCloud.get(j).getLocX());
-            float ry1 = (tagCloud.get(j).getLocY()) * cos_mAngleX +
-                    tagCloud.get(j).getLocZ() * -sin_mAngleX;
-            float rz1 = (tagCloud.get(j).getLocY()) * sin_mAngleX +
-                    tagCloud.get(j).getLocZ() * cos_mAngleX;
+            float rx1 = x;
+            float ry1 = y * mCosX + z * -mSinX;
+            float rz1 = y * mSinX + z * mCosX;
             // multiply new positions by a y-rotation matrix
-            float rx2 = rx1 * cos_mAngleY + rz1 * sin_mAngleY;
+            float rx2 = rx1 * mCosY + rz1 * mSinY;
             float ry2 = ry1;
-            float rz2 = rx1 * -sin_mAngleY + rz1 * cos_mAngleY;
+            float rz2 = rx1 * -mSinY + rz1 * mCosY;
             // multiply new positions by a z-rotation matrix
-            float rx3 = rx2 * cos_mAngleZ + ry2 * -sin_mAngleZ;
-            float ry3 = rx2 * sin_mAngleZ + ry2 * cos_mAngleZ;
+            float rx3 = rx2 * mCosZ + ry2 * -mSinZ;
+            float ry3 = rx2 * mSinZ + ry2 * mCosZ;
             float rz3 = rz2;
             // set arrays to new positions
-            tagCloud.get(j).setLocX(rx3);
-            tagCloud.get(j).setLocY(ry3);
-            tagCloud.get(j).setLocZ(rz3);
+            tag.setSpatialX(rx3);
+            tag.setSpatialY(ry3);
+            tag.setSpatialZ(rz3);
 
             // add perspective
-            int diameter = 2 * radius;
+            int diameter = 2 * mRadius;
             float per = diameter / 1.0f / (diameter + rz3);
             // let's set position, scale, alpha for the tag;
-            tagCloud.get(j).setLoc2DX((int) (rx3 * per));
-            tagCloud.get(j).setLoc2DY((int) (ry3 * per));
-            tagCloud.get(j).setScale(per);
+            tag.setFlatX((int) (rx3 * per));
+            tag.setFlatY((int) (ry3 * per));
+            tag.setScale(per);
 
             // calculate alpha value
             float delta = diameter + rz3;
             maxDelta = Math.max(maxDelta, delta);
             minDelta = Math.min(minDelta, delta);
             float alpha = (delta - minDelta) / (maxDelta - minDelta);
-            tagCloud.get(j).setAlpha(1 - alpha);
+            tag.setAlpha(1 - alpha);
         }
         sortTagByScale();
     }
 
     private float[] getColorFromGradient(float percentage) {
-        //perc: 1.0 full dark; 0.0 full light
         float[] rgba = new float[4];
-        rgba[0] = 1f; //Alpha is 1.0 when init.
-        rgba[1] = (percentage * (tagColorDark[0])) + ((1f - percentage) * (tagColorLight[0]));
-        rgba[2] = (percentage * (tagColorDark[1])) + ((1f - percentage) * (tagColorLight[1]));
-        rgba[3] = (percentage * (tagColorDark[2])) + ((1f - percentage) * (tagColorLight[2]));
+        rgba[0] = 1f;
+        rgba[1] = (percentage * (mDarkColor[0])) + ((1f - percentage) * (mLightColor[0]));
+        rgba[2] = (percentage * (mDarkColor[1])) + ((1f - percentage) * (mLightColor[1]));
+        rgba[3] = (percentage * (mDarkColor[2])) + ((1f - percentage) * (mLightColor[2]));
         return rgba;
     }
 
-    private void sineCosine(float mAngleX, float mAngleY, float mAngleZ) {
+    private void recalculateAngle() {
         double degToRad = (Math.PI / 180);
-        sin_mAngleX = (float) Math.sin(mAngleX * degToRad);
-        cos_mAngleX = (float) Math.cos(mAngleX * degToRad);
-        sin_mAngleY = (float) Math.sin(mAngleY * degToRad);
-        cos_mAngleY = (float) Math.cos(mAngleY * degToRad);
-        sin_mAngleZ = (float) Math.sin(mAngleZ * degToRad);
-        cos_mAngleZ = (float) Math.cos(mAngleZ * degToRad);
+        mSinX = (float) Math.sin(mInertiaX * degToRad);
+        mCosX = (float) Math.cos(mInertiaX * degToRad);
+        mSinY = (float) Math.sin(mInertiaY * degToRad);
+        mCosY = (float) Math.cos(mInertiaY * degToRad);
+        mSinZ = (float) Math.sin(mInertiaZ * degToRad);
+        mCosZ = (float) Math.cos(mInertiaZ * degToRad);
     }
 
     public void setRadius(int radius) {
-        this.radius = radius;
+        this.mRadius = radius;
     }
 
     public void setTagColorLight(float[] tagColor) {
-        this.tagColorLight = tagColor;
+        this.mLightColor = tagColor;
     }
 
     public void setTagColorDark(float[] tagColorDark) {
-        this.tagColorDark = tagColorDark;
+        this.mDarkColor = tagColorDark;
     }
 
-    public void setAngleX(float mAngleX) {
-        this.mAngleX = mAngleX;
-    }
-
-    public void setAngleY(float mAngleY) {
-        this.mAngleY = mAngleY;
+    public void setInertia(float x, float y) {
+        this.mInertiaX = x;
+        this.mInertiaY = y;
     }
 
     public void sortTagByScale() {
-        Collections.sort(tagCloud, new TagComparator());
+        Collections.sort(mTagList);
     }
 
-    private static class TagComparator implements Comparator<Tag> {
+    private void calculatePopularity() {
+        for (int i = 0; i < mTagList.size(); i++) {
+            Tag tag = mTagList.get(i);
+            int popularity = tag.getPopularity();
+            mMaxPopularity = Math.max(mMaxPopularity, popularity);
+            mMinPopularity = Math.min(mMinPopularity, popularity);
+        }
 
-        @Override
-        public int compare(Tag o1, Tag o2) {
-            return o1.getScale() > o2.getScale() ? 1 : -1;
+        for (Tag tag : mTagList) {
+            initTag(tag);
         }
     }
 }
