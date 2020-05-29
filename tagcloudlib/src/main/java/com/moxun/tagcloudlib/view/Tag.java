@@ -1,7 +1,10 @@
 package com.moxun.tagcloudlib.view;
 
 import android.graphics.Color;
+import android.graphics.PointF;
+import android.support.annotation.NonNull;
 import android.view.View;
+import com.moxun.tagcloudlib.view.graphics.Point3DF;
 
 /**
  * Copyright © 2016 moxun
@@ -25,15 +28,17 @@ import android.view.View;
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-public class Tag {
+public class Tag implements Comparable<Tag>{
 
-    private int popularity;  //this is the importance/popularity of the Tag
-    private float locX, locY, locZ; //the center of the 3D Tag
-    private float loc2DX, loc2DY;
-    private float scale;
-    private float[] argb;
-    private static final int DEFAULT_POPULARITY = 5;
+    private int mPopularity;
+    private float mScale;
+    private float[] mColor;
     private View mView;
+    private PointF mFlatCenter;
+    private Point3DF mSpatialCenter;
+
+    private static final int DEFAULT_POPULARITY = 5;
+
 
 
     public Tag() {
@@ -44,107 +49,104 @@ public class Tag {
         this(0f, 0f, 0f, 1.0f, popularity);
     }
 
-    public Tag(float locX, float locY, float locZ) {
-        this(locX, locY, locZ, 1.0f, DEFAULT_POPULARITY);
+    public Tag(float x, float y, float z) {
+        this(x, y, z, 1.0f, DEFAULT_POPULARITY);
     }
 
-    public Tag(float locX, float locY, float locZ, float scale) {
-        this(locX, locY, locZ, scale, DEFAULT_POPULARITY);
+    public Tag(float x, float y, float z, float scale) {
+        this(x, y, z, scale, DEFAULT_POPULARITY);
     }
 
-    public Tag(float locX, float locY, float locZ, float scale, int popularity) {
-        this.locX = locX;
-        this.locY = locY;
-        this.locZ = locZ;
+    public Tag(float x, float y, float z, float scale, int popularity) {
+        this.mSpatialCenter = new Point3DF(x, y, z);
+        this.mFlatCenter = new PointF(0f, 0f);
 
-        this.loc2DX = 0;
-        this.loc2DY = 0;
+        this.mColor = new float[]{1.0f, 0.5f, 0.5f, 0.5f};
 
-        this.argb = new float[]{1.0f, 0.5f, 0.5f, 0.5f};
-
-        this.scale = scale;
-        this.popularity = popularity;
+        this.mScale = scale;
+        this.mPopularity = popularity;
     }
 
-    public float getLocX() {
-        return locX;
+    public float getSpatialX() {
+        return mSpatialCenter.x;
     }
 
-    public void setLocX(float locX) {
-        this.locX = locX;
+    public void setSpatialX(float x) {
+        this.mSpatialCenter.x = x;
     }
 
-    public float getLocY() {
-        return locY;
+    public float getSpatialY() {
+        return mSpatialCenter.y;
     }
 
-    public void setLocY(float locY) {
-        this.locY = locY;
+    public void setSpatialY(float y) {
+        this.mSpatialCenter.y = y;
     }
 
-    public float getLocZ() {
-        return locZ;
+    public float getSpatialZ() {
+        return mSpatialCenter.z;
     }
 
-    public void setLocZ(float locZ) {
-        this.locZ = locZ;
+    public void setSpatialZ(float z) {
+        this.mSpatialCenter.z = z;
     }
 
     public float getScale() {
-        return scale;
+        return mScale;
     }
 
     public void setScale(float scale) {
-        this.scale = scale;
+        this.mScale = scale;
     }
 
     public View getView() {
         return mView;
     }
 
-    public void setView(View view) {
+    public void bindingView(View view) {
         this.mView = view;
     }
 
     public void setAlpha(float alpha) {
-        this.argb[0] = alpha;
+        this.mColor[0] = alpha;
     }
 
     public int getPopularity() {
-        return popularity;
+        return mPopularity;
     }
 
-    public void setPopularity(int popularity) {
-        this.popularity = popularity;
+    public float getFlatX() {
+        return mFlatCenter.x;
     }
 
-    public float getLoc2DX() {
-        return loc2DX;
+    public void setFlatX(float x) {
+        this.mFlatCenter.x = x;
     }
 
-    public void setLoc2DX(float loc2dx) {
-        loc2DX = loc2dx;
+    public float getFlatY() {
+        return mFlatCenter.y;
     }
 
-    public float getLoc2DY() {
-        return loc2DY;
+    public void setFlatY(float y) {
+        this.mFlatCenter.y = y;
     }
 
-    public void setLoc2DY(float loc2dy) {
-        loc2DY = loc2dy;
-    }
-
-    public void setColorByArray(float[] rgb) {
+    public void setColorComponent(float[] rgb) {
         if (rgb != null) {
-            System.arraycopy(rgb, 0, this.argb, this.argb.length - rgb.length, rgb.length);
+            System.arraycopy(rgb, 0, this.mColor, this.mColor.length - rgb.length, rgb.length);
         }
     }
 
     public int getColor() {
         int[] result = new int[4];
         for (int i = 0; i < 4; i++) {
-            result[i] = (int) (this.argb[i] * 0xff);
+            result[i] = (int) (this.mColor[i] * 0xff);
         }
         return Color.argb(result[0], result[1], result[2], result[3]);
+    }
+
+    @Override
+    public int compareTo(@NonNull Tag another) {
+        return this.getScale() > another.getScale() ? 1 : -1;
     }
 }
